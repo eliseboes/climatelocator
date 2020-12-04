@@ -8,17 +8,9 @@ const {
 const {
   doesNotMatch
 } = require('assert');
-const dbHelper = require('./utils/helpers.js');
+const dbHelper = require('./utils/DatabaseHelper.js');
 
 const port = 3000
-
-const pg = require('knex')({
-  client: 'pg',
-  version: '9.6',
-  searchPath: ['knex', 'public'],
-  connection: process.env.PG_CONNECTION_STRING ? process.env.PG_CONNECTION_STRING : 'postgres://example:example@localhost:5432/climatelocator'
-});
-
 
 const app = express();
 http.Server(app);
@@ -63,6 +55,6 @@ app.get('/', async (req, res) => {
 //     });
 // });
 
-dbHelper.initialiseTables();
+dbHelper.initialiseTables;
 
 module.exports = app;
