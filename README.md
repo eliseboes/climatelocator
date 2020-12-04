@@ -1,5 +1,5 @@
 # What this project does
-The climatelocator API returns climate data from different locations. Possible data requests are: the avarage monthly temperatures, the name of the location and location in geohashes. 
+The climatelocator API returns climate data from different locations. Possible data requests are: the avarage monthly temperatures, the name of the location and location in geohashes .
 
 ## Why is it useful
 This API can be used to visualize weather and changes in weather. By using this data, there is the possibility to create datavisualisations or simply display any weather information on a website. Furthermore, the data can be used for installations and real-time applications. 
