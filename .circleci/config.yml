@@ -21,3 +21,5 @@ jobs:
           docker build -t eliseboes/climatelocator_api:$TAG .
           docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
           docker push eliseboes/climatelocator_api:$TAG
+        env:
+          CI: true
