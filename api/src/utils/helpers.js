@@ -6,34 +6,16 @@ const Helpers = {
      const uuid = uuidv1();  
      return uuid;
   },
-  checkTitleUppercase: title =>{
-    if(title.charAt(0) == title.charAt(0).toUpperCase()){
-      return title
-    }else{
-      return false
-    }
-  },
-  checkTitleLength: title =>{
-    if(title.length < 100){
-      return true
-    }else{
-      return false
-    }
-  },
-  checkTitleType: title =>{
-    if(typeof(title) == 'string'){
-      return title
-    }else{
-      return false
-    }
-  },
-  checkUUID: data =>{
-    if(data.hasOwnProperty('uuid')){
-      return data.uuid
+  //Check of het type van de maanden een object is en of de variabele niet null is
+  //En of het geen array is, omdat objecten en arrays verward worden
+  checkYearlyAverages: (months) =>{
+    if(typeof months === 'object' && months !== null && !Array.isArray(months)){
+      return months
     }else{
       return false
     }
   }
+
 }
 
 module.exports = Helpers

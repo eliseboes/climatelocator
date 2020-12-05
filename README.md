@@ -8,7 +8,7 @@ This API can be used to visualize weather and changes in weather. By using this 
 1. 
 
 ## Where can I find help
-Please post your questions and any other information the issue section in Github, with the correct tags.
+Please post your questions and any others the issue section in Github, with the correct tags.
 
 ## Project status
 In development.
