@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607622123387" clover="3.2.0">
-  <project timestamp="1607622123387" name="All files">
-    <metrics statements="11" coveredstatements="9" conditionals="7" coveredconditionals="7" methods="3" coveredmethods="2" elements="21" coveredelements="18" complexity="0" loc="11" ncloc="11" packages="1" files="1" classes="1"/>
+<coverage generated="1607627278584" clover="3.2.0">
+  <project timestamp="1607627278584" name="All files">
+    <metrics statements="14" coveredstatements="12" conditionals="9" coveredconditionals="9" methods="4" coveredmethods="3" elements="27" coveredelements="24" complexity="0" loc="14" ncloc="14" packages="1" files="1" classes="1"/>
     <file name="helpers.js" path="C:\_GIT\DEV_V\Werkstuk\climatelocator\api\src\utils\helpers.js">
-      <metrics statements="11" coveredstatements="9" conditionals="7" coveredconditionals="7" methods="3" coveredmethods="2"/>
+      <metrics statements="14" coveredstatements="12" conditionals="9" coveredconditionals="9" methods="4" coveredmethods="3"/>
       <line num="2" count="1" type="stmt"/>
       <line num="4" count="1" type="stmt"/>
       <line num="6" count="0" type="stmt"/>
@@ -14,7 +14,10 @@
       <line num="19" count="2" type="cond" truecount="2" falsecount="0"/>
       <line num="20" count="1" type="stmt"/>
       <line num="22" count="1" type="stmt"/>
-      <line num="28" count="1" type="stmt"/>
+      <line num="28" count="2" type="cond" truecount="2" falsecount="0"/>
+      <line num="29" count="1" type="stmt"/>
+      <line num="31" count="1" type="stmt"/>
+      <line num="37" count="1" type="stmt"/>
     </file>
   </project>
 </coverage>
