@@ -15,6 +15,7 @@ const Helpers = {
       return false
     }
   }
+
 }
 
 module.exports = Helpers

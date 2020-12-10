@@ -17,7 +17,7 @@ jobs:
       
       - run: |
           cd api
-          TAG="0.1.${​​​​CIRCLE_BUILD_NUM}​​​​"
+          TAG="0.1​​​​"
           docker build -t eliseboes/climatelocator_api:$TAG .
           docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
           docker push eliseboes/climatelocator_api:$TAG
