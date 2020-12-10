@@ -39,7 +39,6 @@ const initialiseTables = async() => {
         .then(async () => {
           console.log('created table locations');
         });
-
     }
   });
 }

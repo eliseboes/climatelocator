@@ -14,7 +14,7 @@ services:
 
 
   db:
-    container_name: climatelocator_api   
+    container_name: climatelocator_api
     image: postgres
     restart: always
     environment:
