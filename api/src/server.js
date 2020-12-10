@@ -39,10 +39,11 @@ app.get('/', async (req, res) => {
 //   const data = {
 //         uuid: uuid,
 //         name: 'Tokyo',
-//         monthly_av: [{Jan: 5.1, Feb: 5.8, Mar: 8.6}],
+//         monthly_average: [{Jan: 5.1, Feb: 5.8, Mar: 8.6, Apr: 10, May: 11, Jun: 12, Jul: 13, Aug: 14, Sep: 15, Oct: 12, Nov: 11, Dec: 7}],
 //         content: req.body.content,
 //         year: 2020
 //   }
+//   if(data.monthly_average){
 //   pg('countries').insert(data)
 //     .then(function (result) {
 //       app.get('/addlocation', async (req, res) => {
@@ -53,6 +54,10 @@ app.get('/', async (req, res) => {
 //       console.log(e);
 //       res.status(404).send();
 //     });
+//   }else{
+//     console.log(e);
+//     res.status(404).send();
+//   }
 // });
 
 dbHelper.initialiseTables;
