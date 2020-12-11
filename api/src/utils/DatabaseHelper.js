@@ -31,7 +31,7 @@ const initialiseTables = async() => {
           table.uuid('uuid');
           table.string('name');
           table.string('geohash');
-          table.string('monthly_av');
+          table.string('yearly_averages');
           table.string('year');
           table.string('year_id');
           table.timestamps(true, true);

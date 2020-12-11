@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.65% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/17</span>
+                <span class='fraction'>12/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">17.65% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/17</span>
+                <span class='fraction'>12/14</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -89,13 +89,7 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -104,31 +98,25 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,34 +129,28 @@ const Helpers = {
      const uuid = <span class="cstat-no" title="statement not covered" >uuidv1();  </span>
 <span class="cstat-no" title="statement not covered" >     return uuid;</span>
   },
-  checkTitleUppercase: <span class="fstat-no" title="function not covered" >ti</span>tle =&gt;{
-<span class="cstat-no" title="statement not covered" >    if(title.charAt(0) == title.charAt(0).toUpperCase()){</span>
-<span class="cstat-no" title="statement not covered" >      return title</span>
+  checkYearlyAverages: (months) =&gt;{
+    if(typeof months === 'object' &amp;&amp; months !== null &amp;&amp; !Array.isArray(months)){
+      return months
     }else{
-<span class="cstat-no" title="statement not covered" >      return false</span>
+      return false
     }
   },
-  checkTitleLength: <span class="fstat-no" title="function not covered" >ti</span>tle =&gt;{
-<span class="cstat-no" title="statement not covered" >    if(title.length &lt; 100){</span>
-<span class="cstat-no" title="statement not covered" >      return true</span>
+  checkGeohashLength: (geohash) =&gt;{
+    if(geohash.length &lt;= 10){
+      return geohash
     }else{
-<span class="cstat-no" title="statement not covered" >      return false</span>
+      return false
     }
   },
-  checkTitleType: <span class="fstat-no" title="function not covered" >ti</span>tle =&gt;{
-<span class="cstat-no" title="statement not covered" >    if(typeof(title) == 'string'){</span>
-<span class="cstat-no" title="statement not covered" >      return title</span>
+  checkGeohashFormat: (geohash) =&gt;{
+    if(geohash.match("^[A-​Za-z0-9]+$") !== null){
+      return geohash
     }else{
-<span class="cstat-no" title="statement not covered" >      return false</span>
-    }
-  },
-  checkUUID: <span class="fstat-no" title="function not covered" >da</span>ta =&gt;{
-<span class="cstat-no" title="statement not covered" >    if(data.hasOwnProperty('uuid')){</span>
-<span class="cstat-no" title="statement not covered" >      return data.uuid</span>
-    }else{
-<span class="cstat-no" title="statement not covered" >      return false</span>
+      return false
     }
   }
+&nbsp;
 }
 &nbsp;
 module.exports = Helpers</pre></td></tr></table></pre>
@@ -178,7 +160,7 @@ module.exports = Helpers</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Dec 04 2020 19:40:37 GMT+0100 (GMT+01:00)
+                at Fri Dec 11 2020 15:51:13 GMT+0100 (GMT+01:00)
             </div>
         </div>
         <script src="../../prettify.js"></script>

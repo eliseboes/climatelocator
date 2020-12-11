@@ -17,17 +17,17 @@ describe('GET / endpoint', () => {
     });
 });
 
-// describe('POST /addlocation endpoint', () => {
-//     test('check if /addlocation responds to 200 and inserts a location in db', async (done) => {
-//         try {
-//             await request.post('/addlocation')
-//                 .expect(200)
-//                 .then((res) => {
-//                     done()
-//                 });
-//         } catch (e) {
-//             if (e) console.log(e);
-//         }
-//     });
-// });
+describe('POST /addlocation endpoint', () => {
+    test('if /addlocation responds to 201', async (done) => {
+        try {
+            await request.post('/addlocation')
+                .expect(201)
+                .then((res) => {
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
 
