@@ -67,7 +67,8 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('name');
           table.string('geohash');
-          table.string('yearly_averages');
+          table.string('yearly_averages_low');
+          table.string('yearly_averages_high');
           table.string('year');
           table.string('year_id');
           table.timestamps(true, true);
@@ -81,8 +82,22 @@ async function initialiseTables() {
 initialiseTables();
 
 app.post('/addlocation', async (req, res) => {
+  const uuid = Helpers.generateUUID();
+  const data = {
+        uuid: uuid,
+        name: 'Tokyo',
+        geohash: 'xn774c06kdtd',
+        yearly_averages_low: {Jan: 2.0, Feb: 2.0, Mar: 5.0, Apr: 10.0, May: 14.0, Jun: 18.0, Jul: 21.8, Aug: 23.0, Sep: 20.0, Oct: 15.0, Nov: 9.0, Dec: 4.0},
+        yearly_averages_high: {Jan: 8.0, Feb: 9.0, Mar: 12.0, Apr: 17.0, May: 21.0, Jun: 25.5, Jul: 28.0, Aug: 29.0, Sep: 26.0, Oct: 20.0, Nov: 15.0, Dec: 11.0},
+        year: 2020
+  }
+  pg('locations').insert(data)
+    .then(function (result) {
       res.status(201).send();
-      
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
 });
 
 dbHelper.initialiseTables;

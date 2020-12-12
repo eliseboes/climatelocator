@@ -18,7 +18,7 @@ describe('GET / endpoint', () => {
 });
 
 describe('POST /addlocation endpoint', () => {
-    test('if /addlocation responds to 201', async (done) => {
+    test('if /addlocation responds to 201 and inserts a location into the database', async (done) => {
         try {
             await request.post('/addlocation')
                 .expect(201)

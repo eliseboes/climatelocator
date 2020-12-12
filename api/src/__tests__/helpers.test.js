@@ -17,10 +17,10 @@ describe('check', () => {
     expect(Helpers.checkGeohashLength('gkpgkpebp6mb4')).toBeFalsy();
   });
 
-  test('if geohash contains only letters or digits', () => {
+  test('if geohash contains only letters and/or digits', () => {
     expect(Helpers.checkGeohashFormat('gkp15')).toStrictEqual('gkp15');
   });
-  test('if geohash does not contain only letters or digits', () => {
+  test('if geohash does not contain only letters and/or digits', () => {
     expect(Helpers.checkGeohashFormat('gkpgkpe_%4')).toBeFalsy();
   });
 
