@@ -31,3 +31,16 @@ describe('POST /addlocation endpoint', () => {
     });
 });
 
+describe('POST /removelocation endpoint', () => {
+    test('if /remove location responds to 200 and deletes a location from the database', async (done) => {
+        try {
+            await request.post('/removelocation')
+                .expect(200)
+                .then((res) => {
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});

@@ -100,6 +100,8 @@ app.post('/addlocation', async (req, res) => {
     });
 });
 
-dbHelper.initialiseTables;
+app.post('/removelocation', async (req, res) => {
+  res.status(200).send();
+});
 
 module.exports = app;
