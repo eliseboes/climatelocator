@@ -27,9 +27,9 @@ app.use(
 /*--------------------- INFO ----------------------*/
 
 app.get('/', async (req, res) => {
-      res.send(
-        '<h2>Endpoints</h2>'
-      );
+  res.send(
+    '<h2>Endpoints</h2>'
+  );
 });
 
 /*---------------- ADD LOCATION ------------------*/
@@ -84,12 +84,38 @@ initialiseTables();
 app.post('/addlocation', async (req, res) => {
   const uuid = Helpers.generateUUID();
   const data = {
-        uuid: uuid,
-        name: 'Tokyo',
-        geohash: 'xn774c06kdtd',
-        yearly_averages_low: {Jan: 2.0, Feb: 2.0, Mar: 5.0, Apr: 10.0, May: 14.0, Jun: 18.0, Jul: 21.8, Aug: 23.0, Sep: 20.0, Oct: 15.0, Nov: 9.0, Dec: 4.0},
-        yearly_averages_high: {Jan: 8.0, Feb: 9.0, Mar: 12.0, Apr: 17.0, May: 21.0, Jun: 25.5, Jul: 28.0, Aug: 29.0, Sep: 26.0, Oct: 20.0, Nov: 15.0, Dec: 11.0},
-        year: 2020
+    uuid: uuid,
+    name: 'Tokyo',
+    geohash: 'xn774c06kdtd',
+    yearly_averages_low: {
+      Jan: 2.0,
+      Feb: 2.0,
+      Mar: 5.0,
+      Apr: 10.0,
+      May: 14.0,
+      Jun: 18.0,
+      Jul: 21.8,
+      Aug: 23.0,
+      Sep: 20.0,
+      Oct: 15.0,
+      Nov: 9.0,
+      Dec: 4.0
+    },
+    yearly_averages_high: {
+      Jan: 8.0,
+      Feb: 9.0,
+      Mar: 12.0,
+      Apr: 17.0,
+      May: 21.0,
+      Jun: 25.5,
+      Jul: 28.0,
+      Aug: 29.0,
+      Sep: 26.0,
+      Oct: 20.0,
+      Nov: 15.0,
+      Dec: 11.0
+    },
+    year: 2020
   }
   pg('locations').insert(data)
     .then(function (result) {
@@ -101,7 +127,19 @@ app.post('/addlocation', async (req, res) => {
 });
 
 app.post('/removelocation', async (req, res) => {
-  res.status(200).send();
+  const uuid = 'b2509760-3c6d-11eb-a0a4-a1cb35889479'
+  pg('locations')
+    .where({
+      uuid: uuid
+    })
+    .del()
+    .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+
 });
 
 module.exports = app;
