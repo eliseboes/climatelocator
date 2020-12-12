@@ -82,6 +82,7 @@ initialiseTables();
 
 app.post('/addlocation', async (req, res) => {
       res.status(201).send();
+      
 });
 
 dbHelper.initialiseTables;
