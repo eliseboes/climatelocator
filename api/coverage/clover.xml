@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607773574318" clover="3.2.0">
-  <project timestamp="1607773574318" name="All files">
-    <metrics statements="69" coveredstatements="46" conditionals="15" coveredconditionals="12" methods="19" coveredmethods="13" elements="103" coveredelements="71" complexity="0" loc="69" ncloc="69" packages="2" files="3" classes="3"/>
+<coverage generated="1607773843029" clover="3.2.0">
+  <project timestamp="1607773843030" name="All files">
+    <metrics statements="73" coveredstatements="48" conditionals="15" coveredconditionals="12" methods="21" coveredmethods="14" elements="109" coveredelements="74" complexity="0" loc="73" ncloc="73" packages="2" files="3" classes="3"/>
     <package name="src">
-      <metrics statements="55" coveredstatements="32" conditionals="6" coveredconditionals="3" methods="15" coveredmethods="9"/>
+      <metrics statements="59" coveredstatements="34" conditionals="6" coveredconditionals="3" methods="17" coveredmethods="10"/>
       <file name="server.js" path="C:\_GIT\DEV_V\Werkstuk\climatelocator\api\src\server.js">
-        <metrics statements="55" coveredstatements="32" conditionals="6" coveredconditionals="3" methods="15" coveredmethods="9"/>
+        <metrics statements="59" coveredstatements="34" conditionals="6" coveredconditionals="3" methods="17" coveredmethods="10"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -60,7 +60,11 @@
         <line num="140" count="0" type="stmt"/>
         <line num="144" count="1" type="stmt"/>
         <line num="145" count="1" type="stmt"/>
-        <line num="148" count="1" type="stmt"/>
+        <line num="146" count="1" type="stmt"/>
+        <line num="167" count="1" type="stmt"/>
+        <line num="169" count="0" type="stmt"/>
+        <line num="170" count="0" type="stmt"/>
+        <line num="174" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.utils">

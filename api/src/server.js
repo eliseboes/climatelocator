@@ -142,7 +142,33 @@ app.post('/removelocation', async (req, res) => {
 });
 
 app.post('/updatelocation', async (req, res) => {
-  res.status(200).send();
+  const uuid = '55fb81a0-3c6d-11eb-a3e5-c1be23be73e1'
+  pg('locations')
+    .where({
+      uuid: uuid
+    })
+    .update({
+      yearly_averages_high: {
+        Jan: 8.0,
+        Feb: 10.0,
+        Mar: 13.0,
+        Apr: 17.0,
+        May: 21.0,
+        Jun: 25.5,
+        Jul: 28.0,
+        Aug: 29.0,
+        Sep: 26.0,
+        Oct: 20.0,
+        Nov: 15.0,
+        Dec: 11.0
+      }
+    })
+    .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
 });
 
 module.exports = app;
