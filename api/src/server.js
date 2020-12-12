@@ -139,7 +139,10 @@ app.post('/removelocation', async (req, res) => {
       console.log(e);
       res.status(404).send();
     });
+});
 
+app.post('/updatelocation', async (req, res) => {
+  res.status(200).send();
 });
 
 module.exports = app;

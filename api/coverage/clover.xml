@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1607772994185" clover="3.2.0">
-  <project timestamp="1607772994186" name="All files">
-    <metrics statements="67" coveredstatements="44" conditionals="15" coveredconditionals="12" methods="18" coveredmethods="12" elements="100" coveredelements="68" complexity="0" loc="67" ncloc="67" packages="2" files="3" classes="3"/>
+<coverage generated="1607773574318" clover="3.2.0">
+  <project timestamp="1607773574318" name="All files">
+    <metrics statements="69" coveredstatements="46" conditionals="15" coveredconditionals="12" methods="19" coveredmethods="13" elements="103" coveredelements="71" complexity="0" loc="69" ncloc="69" packages="2" files="3" classes="3"/>
     <package name="src">
-      <metrics statements="53" coveredstatements="30" conditionals="6" coveredconditionals="3" methods="14" coveredmethods="8"/>
+      <metrics statements="55" coveredstatements="32" conditionals="6" coveredconditionals="3" methods="15" coveredmethods="9"/>
       <file name="server.js" path="C:\_GIT\DEV_V\Werkstuk\climatelocator\api\src\server.js">
-        <metrics statements="53" coveredstatements="30" conditionals="6" coveredconditionals="3" methods="14" coveredmethods="8"/>
+        <metrics statements="55" coveredstatements="32" conditionals="6" coveredconditionals="3" methods="15" coveredmethods="9"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -58,7 +58,9 @@
         <line num="137" count="1" type="stmt"/>
         <line num="139" count="0" type="stmt"/>
         <line num="140" count="0" type="stmt"/>
+        <line num="144" count="1" type="stmt"/>
         <line num="145" count="1" type="stmt"/>
+        <line num="148" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.utils">

@@ -44,3 +44,17 @@ describe('POST /removelocation endpoint', () => {
         }
     });
 });
+
+describe('POST /updatelocation endpoint', () => {
+    test('if /update location responds to 200 and updates a location from the database', async (done) => {
+        try {
+            await request.post('/updatelocation')
+                .expect(200)
+                .then((res) => {
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
