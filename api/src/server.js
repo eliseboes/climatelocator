@@ -120,6 +120,7 @@ app.post('/addlocation', async (req, res) => {
   pg('locations').insert(data)
     .then(function (result) {
       res.status(201).send();
+      app.get()
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -164,6 +165,22 @@ app.post('/updatelocation', async (req, res) => {
       }
     })
     .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+app.get('/getlocation/:uuid', async (req, res) => {
+  pg('locations')
+    .where({
+      uuid: req.params.uuid
+    })
+    .then(result =>{
+      res.json({
+        res: result
+      })
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
