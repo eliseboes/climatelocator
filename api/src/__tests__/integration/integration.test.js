@@ -58,3 +58,17 @@ describe('POST /updatelocation endpoint', () => {
         }
     });
 });
+
+describe('GET /getlocation endpoint', () => {
+    test('if /getlocation responds to 200 and returns a location from the database', async (done) => {
+        try {
+            await request.get('/getlocation/55fb81a0-3c6d-11eb-a3e5-c1be23be73e1')
+                .expect(200)
+                .then((res) => {
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
