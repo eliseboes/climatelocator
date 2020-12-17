@@ -50,13 +50,13 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('most_affected_country');
           table.string('hottest_temperature');
+          table.string('hottest_month');
           table.string('num_disasters');
           table.timestamps(true, true);
         })
         .then(async () => {
           console.log('created table year');
         });
-
     }
   });
   await pg.schema.hasTable('locations').then(async (exists) => {
@@ -70,7 +70,6 @@ async function initialiseTables() {
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
           table.string('year');
-          table.string('year_id');
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -83,10 +82,10 @@ initialiseTables();
 
 app.post('/addlocation', async (req, res) => {
   const uuid = Helpers.generateUUID();
-  const data = {
+  const location = {
     uuid: uuid,
     name: 'Tokyo',
-    geohash: 'xn774c06kdtd',
+    geohash: 'xn76cydhz',
     yearly_averages_low: {
       Jan: 2.0,
       Feb: 2.0,
@@ -117,14 +116,16 @@ app.post('/addlocation', async (req, res) => {
     },
     year: 2020
   }
-  pg('locations').insert(data)
-    .then(function (result) {
-      res.status(201).send();
-      app.get()
-    }).catch((e) => {
-      console.log(e);
-      res.status(404).send();
-    });
+  if (Helpers.checkGeohashFormat(location.geohash) == location.geohash && Helpers.checkGeohashLength(location.geohash) == location.geohash) {
+    pg('locations').insert(location)
+      .then(function (result) {
+        res.status(201).send();
+        app.get()
+      }).catch((e) => {
+        console.log(e);
+        res.status(404).send();
+      });
+  }
 });
 
 app.post('/removelocation', async (req, res) => {
@@ -177,7 +178,7 @@ app.get('/getlocation/:uuid', async (req, res) => {
     .where({
       uuid: req.params.uuid
     })
-    .then(result =>{
+    .then(result => {
       res.json({
         res: result
       })
@@ -187,5 +188,6 @@ app.get('/getlocation/:uuid', async (req, res) => {
       res.status(404).send();
     });
 });
+
 
 module.exports = app;
