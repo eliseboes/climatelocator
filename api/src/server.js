@@ -50,6 +50,8 @@ async function initialiseTables() {
           table.uuid('uuid');
           table.string('most_affected_country');
           table.string('hottest_temperature');
+          table.string('hottest_month');
+          table.string('temperature_above_average');
           table.string('num_disasters');
           table.timestamps(true, true);
         })
@@ -70,7 +72,6 @@ async function initialiseTables() {
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
           table.string('year');
-          table.string('year_id');
           table.timestamps(true, true);
         })
         .then(async () => {
