@@ -86,7 +86,7 @@ app.post('/addlocation', async (req, res) => {
   const data = {
     uuid: uuid,
     name: 'Tokyo',
-    geohash: 'xn774c06kdtd',
+    geohash: 'xn76cydhz',
     yearly_averages_low: {
       Jan: 2.0,
       Feb: 2.0,
@@ -117,14 +117,16 @@ app.post('/addlocation', async (req, res) => {
     },
     year: 2020
   }
-  pg('locations').insert(data)
-    .then(function (result) {
-      res.status(201).send();
-      app.get()
-    }).catch((e) => {
-      console.log(e);
-      res.status(404).send();
-    });
+  if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
+    pg('locations').insert(data)
+      .then(function (result) {
+        res.status(201).send();
+        app.get()
+      }).catch((e) => {
+        console.log(e);
+        res.status(404).send();
+      });
+  }
 });
 
 app.post('/removelocation', async (req, res) => {
@@ -177,7 +179,7 @@ app.get('/getlocation/:uuid', async (req, res) => {
     .where({
       uuid: req.params.uuid
     })
-    .then(result =>{
+    .then(result => {
       res.json({
         res: result
       })
