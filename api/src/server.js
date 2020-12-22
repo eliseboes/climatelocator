@@ -42,23 +42,22 @@ const pg = require('knex')({
 });
 
 async function initialiseTables() {
-  await pg.schema.hasTable('year').then(async (exists) => {
+  await pg.schema.hasTable('disasters').then(async (exists) => {
     if (!exists) {
       await pg.schema
-        .createTable('year', (table) => {
+        .createTable('disasters', (table) => {
           table.increments();
           table.uuid('uuid');
-          table.string('most_affected_country');
-          table.string('hottest_temperature');
-          table.string('hottest_month');
-          table.string('temperature_above_average');
-          table.string('num_disasters');
+          table.string('name');
+          table.string('fatalities');
+          table.string('injuries');
+          table.string('missing');
+          table.string('damage');
           table.timestamps(true, true);
         })
         .then(async () => {
-          console.log('created table year');
+          console.log('created table disasters');
         });
-
     }
   });
   await pg.schema.hasTable('locations').then(async (exists) => {
@@ -71,7 +70,6 @@ async function initialiseTables() {
           table.string('geohash');
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
-          table.string('year');
           table.timestamps(true, true);
         })
         .then(async () => {
