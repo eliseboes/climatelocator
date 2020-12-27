@@ -219,6 +219,19 @@ app.post('/adddisaster', async (req, res) => {
       });
 });
 
-
+app.post('/removedisaster', async (req, res) => {
+  const uuid = 'e9be6c10-45da-11eb-a5c9-eb0830bf7e03'
+  pg('disasters')
+    .where({
+      uuid: uuid
+    })
+    .del()
+    .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
 
 module.exports = app;
