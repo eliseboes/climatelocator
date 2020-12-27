@@ -265,4 +265,20 @@ app.get('/getalldisasters', async (req, res) => {
     });
 });
 
+app.get('/disasterbytype/:type', async (req, res) => {
+  pg('disasters')
+    .where({
+      type: req.params.type
+    })
+    .then(result => {
+      res.json({
+        res: result
+      })
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
 module.exports = app;
