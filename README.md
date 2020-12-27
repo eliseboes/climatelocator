@@ -18,11 +18,7 @@ By using this data, there is the possibility to create datavisualisations or sim
 ```
 git clone https://github.com/eliseboes/climatelocator.git
 ```
-2. Install NPM packages
-```
-npm install
-```
-3. Run docker
+2. Run docker
 ```
 docker-compose up
 ```
