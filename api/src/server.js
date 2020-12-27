@@ -48,11 +48,13 @@ async function initialiseTables() {
         .createTable('disasters', (table) => {
           table.increments();
           table.uuid('uuid');
+          table.string('type');
           table.string('name');
           table.string('fatalities');
-          table.string('injuries');
-          table.string('missing');
+          table.string('affected');
           table.string('damage');
+          table.string('start_date');
+          table.string('end_date');
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -188,5 +190,35 @@ app.get('/getlocation/:uuid', async (req, res) => {
       res.status(404).send();
     });
 });
+
+app.post('/adddisaster', async (req, res) => {
+  const uuid = Helpers.generateUUID();
+  const data = {
+    uuid: uuid,
+    type: 'flood',
+    name: 'East Africa floods',
+    fatalities: 453,
+    affected: 700.000,
+    damage: 'unknown',
+    start_date: {
+      month: 03,
+      year: 2020
+    },
+    end_date: {
+      month: 05,
+      year: 2020
+    }
+  }
+    pg('disasters').insert(data)
+      .then(function (result) {
+        res.status(201).send();
+        app.get()
+      }).catch((e) => {
+        console.log(e);
+        res.status(404).send();
+      });
+});
+
+
 
 module.exports = app;
