@@ -115,8 +115,7 @@ app.post('/addlocation', async (req, res) => {
       Oct: 20.0,
       Nov: 15.0,
       Dec: 11.0
-    },
-    year: 2020
+    }
   }
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     pg('locations').insert(data)
@@ -130,8 +129,8 @@ app.post('/addlocation', async (req, res) => {
   }
 });
 
-app.post('/removelocation', async (req, res) => {
-  const uuid = 'b2509760-3c6d-11eb-a0a4-a1cb35889479'
+app.delete('/removelocation', async (req, res) => {
+  const uuid = 'cf56f2c0-4ada-11eb-815e-091c45f740e4'
   pg('locations')
     .where({
       uuid: uuid
@@ -193,19 +192,26 @@ app.get('/getlocation/:uuid', async (req, res) => {
 
 app.post('/adddisaster', async (req, res) => {
   const uuid = Helpers.generateUUID();
+  //select from locations
+  //return uuid
+  //Meegeven aan post: type, uuid locatie (test)
+  // if !exsists
+  //In body post request meegeven
+  //req.body.location_uuid
   const data = {
     uuid: uuid,
+    location_uuid: location_uuid,//location uuid, join
     type: 'flood',
     name: 'East Africa floods',
     fatalities: 453,
     affected: 700.000,
     damage: 'unknown',
     start_date: {
-      month: 03,
+      month: 3,
       year: 2020
     },
     end_date: {
-      month: 05,
+      month: 5,
       year: 2020
     }
   }
@@ -219,8 +225,8 @@ app.post('/adddisaster', async (req, res) => {
       });
 });
 
-app.post('/removedisaster', async (req, res) => {
-  const uuid = 'e9be6c10-45da-11eb-a5c9-eb0830bf7e03'
+app.delete('/removedisaster:uuid', async (req, res) => {
+  const uuid = req.params.uuid;
   pg('disasters')
     .where({
       uuid: uuid
