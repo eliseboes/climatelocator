@@ -353,4 +353,16 @@ app.delete('/removedisaster/:uuid', async (req, res) => {
     });
 });
 
+app.post('/adddisaster', async (req, res) => {
+  const data = req.body;
+    pg('disasters').insert(data)
+      .then(function (result) {
+        res.status(201).send();
+        app.get()
+      }).catch((e) => {
+        console.log(e);
+        res.status(404).send();
+      });
+});
+
 module.exports = app;
