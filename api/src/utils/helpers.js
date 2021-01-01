@@ -23,7 +23,7 @@ const Helpers = {
    * @returns geohash if correct, false if not correct */
 
   checkGeohashLength: (geohash) =>{
-    if(geohash.length <= 10){
+    if(geohash.length <= 12){
       return geohash
     }else{
       return false

@@ -49,14 +49,41 @@ async function initialiseTables() {
           table.increments();
           table.uuid('uuid');
           table.string('name');
+          table.string('type');
           table.string('fatalities');
           table.string('injuries');
           table.string('missing');
           table.string('damage');
+          table.string('location_id');
           table.timestamps(true, true);
         })
         .then(async () => {
+          let disasters = [{
+              uuid: Helpers.generateUUID(),
+              name: 'Hurricane Eta',
+              type: 'hurricane',
+              fatalities: 211,
+              missing: 120,
+              damage: 7900000000
+            },
+            {
+              uuid: Helpers.generateUUID(),
+              name: '2020 East Africa Floods',
+              type: 'flood',
+              fatalities: 453,
+              missing: 8
+
+            }, {
+              uuid: Helpers.generateUUID(),
+              name: '2019 European Heat Wave',
+              type: 'heat wave',
+              fatalities: 869
+            }
+          ]
           console.log('created table disasters');
+          for (let i = 0; i < disasters.length; i++) {
+            await pg.table('disasters').insert(disasters[i]);
+          }
         });
     }
   });
@@ -74,11 +101,10 @@ async function initialiseTables() {
         })
         .then(async () => {
           console.log('created table locations');
-          let locations = [
-            {
+          let locations = [{
               uuid: Helpers.generateUUID(),
-              name: 'Congo',
-              geohash: 'krfs4zxrg7ntv',
+              name: 'Kenya',
+              geohash: 'sb4cn8hn24buk',
               yearly_averages_low: {
                 Jan: 2.0,
                 Feb: 2.0,
@@ -140,39 +166,39 @@ async function initialiseTables() {
                 Nov: 15.0,
                 Dec: 11.0
               }
-            },{
-            uuid: Helpers.generateUUID(),
-            name: 'Tokyo',
-            geohash: 'xn76cydhz',
-            yearly_averages_low: {
-              Jan: 2.0,
-              Feb: 2.0,
-              Mar: 5.0,
-              Apr: 10.0,
-              May: 14.0,
-              Jun: 18.0,
-              Jul: 21.8,
-              Aug: 23.0,
-              Sep: 20.0,
-              Oct: 15.0,
-              Nov: 9.0,
-              Dec: 4.0
+            }, {
+              uuid: Helpers.generateUUID(),
+              name: 'Tokyo',
+              geohash: 'xn76cydhz',
+              yearly_averages_low: {
+                Jan: 2.0,
+                Feb: 2.0,
+                Mar: 5.0,
+                Apr: 10.0,
+                May: 14.0,
+                Jun: 18.0,
+                Jul: 21.8,
+                Aug: 23.0,
+                Sep: 20.0,
+                Oct: 15.0,
+                Nov: 9.0,
+                Dec: 4.0
+              },
+              yearly_averages_high: {
+                Jan: 8.0,
+                Feb: 9.0,
+                Mar: 12.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+              }
             },
-            yearly_averages_high: {
-              Jan: 8.0,
-              Feb: 9.0,
-              Mar: 12.0,
-              Apr: 17.0,
-              May: 21.0,
-              Jun: 25.5,
-              Jul: 28.0,
-              Aug: 29.0,
-              Sep: 26.0,
-              Oct: 20.0,
-              Nov: 15.0,
-              Dec: 11.0
-            }
-          },
             {
               uuid: Helpers.generateUUID(),
               name: 'Florida',
@@ -205,9 +231,9 @@ async function initialiseTables() {
                 Nov: 15.0,
                 Dec: 11.0
               }
-          }
+            }
           ]
-          for (let i = 0; i < locations.length-1; i++) {
+          for (let i = 0; i < locations.length; i++) {
             await pg.table('locations').insert(locations[i]);
           }
         });
@@ -309,7 +335,7 @@ app.get('/disasterbytype/:type', async (req, res) => {
 
 app.get('/getalldisasters', async (req, res) => {
   pg.select('*')
-  .from('disasters')
+    .from('disasters')
     .then(result => {
       res.json({
         res: result
@@ -355,14 +381,14 @@ app.delete('/removedisaster/:uuid', async (req, res) => {
 
 app.post('/adddisaster', async (req, res) => {
   const data = req.body;
-    pg('disasters').insert(data)
-      .then(function (result) {
-        res.status(201).send();
-        app.get()
-      }).catch((e) => {
-        console.log(e);
-        res.status(404).send();
-      });
+  pg('disasters').insert(data)
+    .then(function (result) {
+      res.status(201).send();
+      app.get()
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
 });
 
 module.exports = app;
