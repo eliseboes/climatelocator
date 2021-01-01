@@ -217,40 +217,7 @@ async function initialiseTables() {
 initialiseTables();
 
 app.post('/addlocation', async (req, res) => {
-  const uuid = Helpers.generateUUID();
-  const data = {
-    uuid: uuid,
-    name: 'Tokyo',
-    geohash: 'xn76cydhz',
-    yearly_averages_low: {
-      Jan: 2.0,
-      Feb: 2.0,
-      Mar: 5.0,
-      Apr: 10.0,
-      May: 14.0,
-      Jun: 18.0,
-      Jul: 21.8,
-      Aug: 23.0,
-      Sep: 20.0,
-      Oct: 15.0,
-      Nov: 9.0,
-      Dec: 4.0
-    },
-    yearly_averages_high: {
-      Jan: 8.0,
-      Feb: 9.0,
-      Mar: 12.0,
-      Apr: 17.0,
-      May: 21.0,
-      Jun: 25.5,
-      Jul: 28.0,
-      Aug: 29.0,
-      Sep: 26.0,
-      Oct: 20.0,
-      Nov: 15.0,
-      Dec: 11.0
-    }
-  }
+  const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     pg('locations').insert(data)
       .then(function (result) {
@@ -263,13 +230,13 @@ app.post('/addlocation', async (req, res) => {
   }
 });
 
-app.post('/removelocation', async (req, res) => {
-  const uuid = 'b2509760-3c6d-11eb-a0a4-a1cb35889479'
+app.delete('/removelocation/:uuid', async (req, res) => {
+  const uuid = req.params.uuid
   pg('locations')
+    .del()
     .where({
       uuid: uuid
     })
-    .del()
     .then(function (result) {
       res.status(200).send();
     }).catch((e) => {
@@ -280,7 +247,6 @@ app.post('/removelocation', async (req, res) => {
 
 app.post('/updatelocation', async (req, res) => {
   const uuid = req.body.uuid;
-  console.log(uuid, req.body);
   pg('locations')
     .where({
       uuid: uuid
