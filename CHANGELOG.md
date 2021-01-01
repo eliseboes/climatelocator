@@ -9,7 +9,7 @@
 
 [POST] /adddisaster endpoint
 [POST] /updatedisaster endpoint
-[DELETE] /removedisaster endpoint
+[DELETE] /removedisaster:uuid endpoint
 [GET] /disasterbytype:type endpoint
 [GET] /getalldisasters endpoint
 ```
