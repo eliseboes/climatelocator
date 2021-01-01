@@ -321,5 +321,22 @@ app.get('/getalldisasters', async (req, res) => {
     });
 });
 
+app.post('/updatedisaster', async (req, res) => {
+  const uuid = req.body.uuid;
+  pg('disasters')
+    .where({
+      uuid: uuid
+    })
+    .update({
+      type: 'wildfire'
+    })
+    .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
 
 module.exports = app;
