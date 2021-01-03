@@ -3,6 +3,13 @@ const Helpers = require('../../utils/helpers.js')
 const app = require('.././../server.js')
 const request = supertest(app);
 //let locations, connecteren met db + select + haal alle uuids op from locations *, random op uuids
+const pg = require('knex')({
+    client: 'pg',
+    version: '9.6',
+    searchPath: ['knex', 'public'],
+    connection: process.env.PG_CONNECTION_STRING ? process.env.PG_CONNECTION_STRING : 'postgres://example:example@localhost:5432/climatelocator'
+});
+
 describe('GET / endpoint', () => {
     test('check if / responds to 200', async (done) => {
         try {
@@ -19,11 +26,11 @@ describe('GET / endpoint', () => {
 
 describe('POST /addlocation endpoint', () => {
     test('if /addlocation responds to 201 and inserts a location into the database', async (done) => {
-        const uuid = Helpers.generateUUID();
-        const data = {
-            uuid: uuid,
-            name: 'Tokyo',
-            geohash: 'xn76cydhz',
+        const disasterName = 'Hurricane Eta';
+        const location = {
+            uuid: Helpers.generateUUID(),
+            name: 'Florida',
+            geohash: 'dhvz72pzpyz',
             yearly_averages_low: {
                 Jan: 2.0,
                 Feb: 2.0,
@@ -53,16 +60,26 @@ describe('POST /addlocation endpoint', () => {
                 Dec: 11.0
             }
         }
-        try {
-            await request.post('/addlocation')
-                .send(data)
-                .expect(201)
-                .then((res) => {
-                    done()
+        pg.select('*')
+            .from('disasters')
+            .then(async (result) => {
+                let disasters = result;
+                disasters.forEach(disaster => {
+                    if (disasterName == disaster.name) {
+                        location.disaster_id = disaster.uuid;
+                    }
                 });
-        } catch (e) {
-            if (e) console.log(e);
-        }
+                try {
+                    await request.post('/addlocation')
+                        .send(location)
+                        .expect(201)
+                        .then((res) => {
+                            done()
+                        });
+                } catch (e) {
+                    if (e) console.log(e);
+                }
+            });
     });
 });
 
