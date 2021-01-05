@@ -219,12 +219,19 @@ async function initialiseTables() {
 }
 initialiseTables();
 
+/**  add location
+ * @params req.body 
+ * @returns status 201 and inserted location when OK, status 404 when not OK
+ */
 app.post('/location', async (req, res) => {
   const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     pg('locations').insert(data)
       .then(function (result) {
         res.status(201).send();
+        res.json({
+          res:result
+        })
         app.get()
       }).catch((e) => {
         console.log(e);
@@ -233,6 +240,10 @@ app.post('/location', async (req, res) => {
   }
 });
 
+/**  delete location
+ * @params uuid  
+ * @returns status 200 when OK, status 404 when not OK
+ */
 app.delete('/location/:uuid', async (req, res) => {
   const uuid = req.params.uuid
   pg('locations')
@@ -242,12 +253,19 @@ app.delete('/location/:uuid', async (req, res) => {
     })
     .then(function (result) {
       res.status(200).send();
+      res.json({
+        res: result
+      })
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
     });
 });
 
+/**  update location
+ * @params req.body.uuid
+ * @returns status 200 and updated location when OK, status 404 when not OK
+ */
 app.put('/location', async (req, res) => {
   const uuid = req.body.uuid;
   pg('locations')
@@ -272,12 +290,19 @@ app.put('/location', async (req, res) => {
     })
     .then(function (result) {
       res.status(200).send();
+      res.json({
+        res: result
+      })
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
     });
 });
 
+/**  get location by uuid
+ * @params uuid 
+ * @returns status 200 and location when OK, status 404 when not OK
+ */
 app.get('/location/:uuid', async (req, res) => {
   pg('locations')
     .where({
@@ -294,6 +319,10 @@ app.get('/location/:uuid', async (req, res) => {
     });
 });
 
+/**  get disaster by type
+ * @params type
+ * @returns status 200 and disasters of selected type when OK, status 404 when not OK
+ */
 app.get('/disaster/:type', async (req, res) => {
   pg('disasters')
     .where({
@@ -310,6 +339,10 @@ app.get('/disaster/:type', async (req, res) => {
     });
 });
 
+/**  get all disasters
+ * @params 
+ * @returns status 200 and all disasters when OK, status 404 when not OK
+ */
 app.get('/alldisasters', async (req, res) => {
   pg.select('*')
     .from('disasters')
@@ -324,7 +357,11 @@ app.get('/alldisasters', async (req, res) => {
     });
 });
 
-app.put('/disaster/:type', async (req, res) => {
+/**  update disaster by uuid
+ * @params uuid  
+ * @returns status 200 and updated disaster when OK, status 404 when not OK
+ */
+app.put('/disaster/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   pg('disasters')
     .where({
@@ -334,6 +371,9 @@ app.put('/disaster/:type', async (req, res) => {
       type: 'wildfire'
     })
     .then(function (result) {
+      res.json({
+        res: result
+      })
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -341,6 +381,10 @@ app.put('/disaster/:type', async (req, res) => {
     });
 });
 
+/**  delete disaster by uuid
+ * @params uuid  
+ * @returns status 200 when OK, status 404 when not OK
+ */
 app.delete('/disaster/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   pg('disasters')
@@ -356,11 +400,18 @@ app.delete('/disaster/:uuid', async (req, res) => {
     });
 });
 
+/** add disaster
+ * @params uuid  
+ * @returns status 200 and inserted disaster when OK, status 404 when not OK
+ */
 app.post('/disaster', async (req, res) => {
   const data = req.body;
   pg('disasters').insert(data)
     .then(function (result) {
       res.status(201).send();
+      res.json({
+        res: result
+      })
       app.get()
     }).catch((e) => {
       console.log(e);
