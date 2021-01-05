@@ -219,7 +219,7 @@ async function initialiseTables() {
 }
 initialiseTables();
 
-app.post('/addlocation', async (req, res) => {
+app.post('/location', async (req, res) => {
   const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     pg('locations').insert(data)
@@ -233,7 +233,7 @@ app.post('/addlocation', async (req, res) => {
   }
 });
 
-app.delete('/removelocation/:uuid', async (req, res) => {
+app.delete('/location/:uuid', async (req, res) => {
   const uuid = req.params.uuid
   pg('locations')
     .del()
@@ -248,7 +248,7 @@ app.delete('/removelocation/:uuid', async (req, res) => {
     });
 });
 
-app.post('/updatelocation', async (req, res) => {
+app.put('/location', async (req, res) => {
   const uuid = req.body.uuid;
   pg('locations')
     .where({
@@ -278,7 +278,7 @@ app.post('/updatelocation', async (req, res) => {
     });
 });
 
-app.get('/getlocation/:uuid', async (req, res) => {
+app.get('/location/:uuid', async (req, res) => {
   pg('locations')
     .where({
       uuid: req.params.uuid
@@ -294,7 +294,7 @@ app.get('/getlocation/:uuid', async (req, res) => {
     });
 });
 
-app.get('/disasterbytype/:type', async (req, res) => {
+app.get('/disaster/:type', async (req, res) => {
   pg('disasters')
     .where({
       type: req.params.type
@@ -310,7 +310,7 @@ app.get('/disasterbytype/:type', async (req, res) => {
     });
 });
 
-app.get('/getalldisasters', async (req, res) => {
+app.get('/alldisasters', async (req, res) => {
   pg.select('*')
     .from('disasters')
     .then(result => {
@@ -324,8 +324,8 @@ app.get('/getalldisasters', async (req, res) => {
     });
 });
 
-app.post('/updatedisaster', async (req, res) => {
-  const uuid = req.body.uuid;
+app.put('/disaster/:type', async (req, res) => {
+  const uuid = req.params.uuid;
   pg('disasters')
     .where({
       uuid: uuid
@@ -341,7 +341,7 @@ app.post('/updatedisaster', async (req, res) => {
     });
 });
 
-app.delete('/removedisaster/:uuid', async (req, res) => {
+app.delete('/disaster/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   pg('disasters')
     .where({
@@ -356,7 +356,7 @@ app.delete('/removedisaster/:uuid', async (req, res) => {
     });
 });
 
-app.post('/adddisaster', async (req, res) => {
+app.post('/disaster', async (req, res) => {
   const data = req.body;
   pg('disasters').insert(data)
     .then(function (result) {
@@ -367,5 +367,6 @@ app.post('/adddisaster', async (req, res) => {
       res.status(404).send();
     });
 });
+
 
 module.exports = app;

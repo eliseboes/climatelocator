@@ -24,7 +24,7 @@ describe('GET / endpoint', () => {
     });
 });
 
-describe('POST /addlocation endpoint', () => {
+describe('POST /location endpoint', () => {
     test('if /addlocation responds to 201 and inserts a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
@@ -70,7 +70,7 @@ describe('POST /addlocation endpoint', () => {
                     }
                 });
                 try {
-                    await request.post('/addlocation')
+                    await request.post('/location')
                         .send(location)
                         .expect(201)
                         .then((res) => {
@@ -83,10 +83,10 @@ describe('POST /addlocation endpoint', () => {
     });
 });
 
-describe('DELETE /removelocation endpoint', () => {
+describe('DELETE /location endpoint', () => {
     test('if /remove location responds to 200 and deletes a location from the database', async (done) => {
         try {
-            await request.delete('/removelocation/b36b0132-4c49-11eb-b596-0fdd0e82187f')
+            await request.delete('/location/b36b0132-4c49-11eb-b596-0fdd0e82187f')
                 .expect(200)
                 .then((res) => {
                     done()
@@ -97,8 +97,8 @@ describe('DELETE /removelocation endpoint', () => {
     });
 });
 
-describe('POST /updatelocation endpoint', () => {
-    test('if /update location responds to 200 and updates a location from the database', async (done) => {
+describe('PUT /location endpoint', () => {
+    test('if put /location responds to 200 and updates a location from the database', async (done) => {
         const data = {
             uuid: '75b5d0c0-4c4b-11eb-8f01-43d1e1dd6c98',
             yearly_averages_high: {
@@ -117,7 +117,7 @@ describe('POST /updatelocation endpoint', () => {
             }
         }
         try {
-            await request.post('/updatelocation')
+            await request.put('/location')
                 .send(data)
                 .expect(200)
                 .then((res) => {
@@ -129,10 +129,10 @@ describe('POST /updatelocation endpoint', () => {
     });
 });
 
-describe('GET /getlocation endpoint', () => {
-    test('if /getlocation responds to 200 and returns a location from the database', async (done) => {
+describe('GET /location endpoint', () => {
+    test('if /location responds to 200 and returns a location from the database', async (done) => {
         try {
-            await request.get('/getlocation/75b5d0c0-4c4b-11eb-8f01-43d1e1dd6c98')
+            await request.get('/location/75b5d0c0-4c4b-11eb-8f01-43d1e1dd6c98')
                 .expect(200)
                 .then((res) => {
                     done()
