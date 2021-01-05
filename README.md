@@ -1,9 +1,24 @@
 ## **What this project does**
 The climatelocator API returns climate data from different locations and occured disasters related to climate change in that location.
 
-Possible location requests are: the avarage monthly temperatures, the name of the location and location in geohashes.
+<br/> 
 
-Possible disaster requests are: Hurricanes, droughts, floods, wildfires, tornadoes and heat waves.
+
+### A location contains the following information:
+ * The avarage monthly temperatures in degrees
+ * The name of the location
+ * The geohash for that location
+ 
+
+### A disaster contains the following information: the amount of deaths, missing
+ * Type of the disaster (hurrican, drought, flood, wildfire, heat wave)
+ * The name of the disaster
+ * The amount of people injured
+ * Missing
+ * Injuries
+ * The amount of damage in dollars
+
+<br/>
 
 **See getting started for possible endpoints**
 #
