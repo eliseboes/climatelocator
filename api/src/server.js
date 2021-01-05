@@ -223,15 +223,16 @@ initialiseTables();
  * @params req.body 
  * @returns status 201 and inserted location when OK, status 404 when not OK
  */
-app.post('/location', async (req, res) => {
+app.post('/locations', async (req, res) => {
   const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     pg('locations').insert(data)
       .then(function (result) {
-        res.status(201).send();
+        res.status(201)
         res.json({
-          res:result
+          res: result
         })
+        .send();
         app.get()
       }).catch((e) => {
         console.log(e);
@@ -244,7 +245,7 @@ app.post('/location', async (req, res) => {
  * @params uuid  
  * @returns status 200 when OK, status 404 when not OK
  */
-app.delete('/location/:uuid', async (req, res) => {
+app.delete('/locations/:uuid', async (req, res) => {
   const uuid = req.params.uuid
   pg('locations')
     .del()
@@ -253,9 +254,6 @@ app.delete('/location/:uuid', async (req, res) => {
     })
     .then(function (result) {
       res.status(200).send();
-      res.json({
-        res: result
-      })
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -266,7 +264,7 @@ app.delete('/location/:uuid', async (req, res) => {
  * @params req.body.uuid
  * @returns status 200 and updated location when OK, status 404 when not OK
  */
-app.put('/location', async (req, res) => {
+app.put('/locations', async (req, res) => {
   const uuid = req.body.uuid;
   pg('locations')
     .where({
@@ -289,10 +287,11 @@ app.put('/location', async (req, res) => {
       }
     })
     .then(function (result) {
-      res.status(200).send();
+      res.status(200)
       res.json({
         res: result
       })
+      .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -303,7 +302,7 @@ app.put('/location', async (req, res) => {
  * @params uuid 
  * @returns status 200 and location when OK, status 404 when not OK
  */
-app.get('/location/:uuid', async (req, res) => {
+app.get('/locations/:uuid', async (req, res) => {
   pg('locations')
     .where({
       uuid: req.params.uuid
@@ -312,7 +311,8 @@ app.get('/location/:uuid', async (req, res) => {
       res.json({
         res: result
       })
-      res.status(200).send();
+      res.status(200)
+      .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -323,7 +323,7 @@ app.get('/location/:uuid', async (req, res) => {
  * @params type
  * @returns status 200 and disasters of selected type when OK, status 404 when not OK
  */
-app.get('/disaster/:type', async (req, res) => {
+app.get('/disasters/:type', async (req, res) => {
   pg('disasters')
     .where({
       type: req.params.type
@@ -361,7 +361,7 @@ app.get('/alldisasters', async (req, res) => {
  * @params uuid  
  * @returns status 200 and updated disaster when OK, status 404 when not OK
  */
-app.put('/disaster/:uuid', async (req, res) => {
+app.put('/disasters/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   pg('disasters')
     .where({
@@ -385,7 +385,7 @@ app.put('/disaster/:uuid', async (req, res) => {
  * @params uuid  
  * @returns status 200 when OK, status 404 when not OK
  */
-app.delete('/disaster/:uuid', async (req, res) => {
+app.delete('/disasters/:uuid', async (req, res) => {
   const uuid = req.params.uuid;
   pg('disasters')
     .where({
@@ -404,14 +404,14 @@ app.delete('/disaster/:uuid', async (req, res) => {
  * @params uuid  
  * @returns status 200 and inserted disaster when OK, status 404 when not OK
  */
-app.post('/disaster', async (req, res) => {
+app.post('/disasters', async (req, res) => {
   const data = req.body;
   pg('disasters').insert(data)
     .then(function (result) {
-      res.status(201).send();
       res.json({
         res: result
       })
+      res.status(201).send();
       app.get()
     }).catch((e) => {
       console.log(e);
