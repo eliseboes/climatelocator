@@ -226,14 +226,15 @@ initialiseTables();
 app.post('/locations', async (req, res) => {
   const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
-    pg('locations').insert(data)
+    const result = pg('locations')
+      .insert(data)
+      .returning('*')
       .then(function (result) {
         res.status(201)
         res.json({
-          res: result
-        })
-        .send();
-        app.get()
+            res: result
+          })
+          .send();
       }).catch((e) => {
         console.log(e);
         res.status(404).send();
@@ -289,9 +290,9 @@ app.put('/locations', async (req, res) => {
     .then(function (result) {
       res.status(200)
       res.json({
-        res: result
-      })
-      .send();
+          res: result
+        })
+        .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -311,8 +312,7 @@ app.get('/locations/:uuid', async (req, res) => {
       res.json({
         res: result
       })
-      res.status(200)
-      .send();
+      res.status(200).send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -406,7 +406,9 @@ app.delete('/disasters/:uuid', async (req, res) => {
  */
 app.post('/disasters', async (req, res) => {
   const data = req.body;
-  pg('disasters').insert(data)
+  pg('disasters')
+    .insert(data)
+    .returning('*')
     .then(function (result) {
       res.json({
         res: result
