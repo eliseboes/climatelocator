@@ -42,20 +42,54 @@ const pg = require('knex')({
 });
 
 async function initialiseTables() {
-  await pg.schema.hasTable('year').then(async (exists) => {
+  await pg.schema.hasTable('disasters').then(async (exists) => {
     if (!exists) {
       await pg.schema
-        .createTable('year', (table) => {
+        .createTable('disasters', (table) => {
           table.increments();
           table.uuid('uuid');
-          table.string('most_affected_country');
-          table.string('hottest_temperature');
-          table.string('hottest_month');
-          table.string('num_disasters');
+          table.string('name');
+          table.string('type');
+          table.string('fatalities');
+          table.string('injuries');
+          table.string('missing');
+          table.string('damage');
           table.timestamps(true, true);
         })
         .then(async () => {
-          console.log('created table year');
+          let disasters = [{
+              uuid: Helpers.generateUUID(),
+              name: 'Hurricane Eta',
+              type: 'hurricane',
+              fatalities: 211,
+              missing: 120,
+              damage: 7900000000
+            },
+            {
+              uuid: Helpers.generateUUID(),
+              name: '2020 East Africa Floods',
+              type: 'flood',
+              fatalities: 453,
+              missing: 8
+            }, {
+              uuid: Helpers.generateUUID(),
+              name: '2019 European Heat Wave',
+              type: 'heat wave',
+              fatalities: 869
+            },
+            {
+              uuid: Helpers.generateUUID(),
+              name: 'Typhoon Hagibis',
+              type: 'hurricane',
+              fatalities: 98,
+              missing: 7,
+              damage: 15000000000
+            }
+          ]
+          console.log('created table disasters');
+          for (let i = 0; i < disasters.length; i++) {
+            await pg.table('disasters').insert(disasters[i]);
+          }
         });
     }
   });
@@ -69,58 +103,138 @@ async function initialiseTables() {
           table.string('geohash');
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
-          table.string('year');
+          table.string('disaster_id');
           table.timestamps(true, true);
         })
         .then(async () => {
           console.log('created table locations');
+          let locations = [{
+              uuid: Helpers.generateUUID(),
+              name: 'Kenya',
+              geohash: 'sb4cn8hn24buk',
+              yearly_averages_low: {
+                Jan: 2.0,
+                Feb: 2.0,
+                Mar: 5.0,
+                Apr: 10.0,
+                May: 14.0,
+                Jun: 18.0,
+                Jul: 21.8,
+                Aug: 23.0,
+                Sep: 20.0,
+                Oct: 15.0,
+                Nov: 9.0,
+                Dec: 4.0
+              },
+              yearly_averages_high: {
+                Jan: 8.0,
+                Feb: 9.0,
+                Mar: 12.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+              },
+              disaster_id: 'a34a0ac0-4dda-11eb-b21e-6504195ef07a'
+            },
+            {
+              uuid: Helpers.generateUUID(),
+              name: 'Paris',
+              geohash: 'u09tvmqrep',
+              yearly_averages_low: {
+                Jan: 2.0,
+                Feb: 2.0,
+                Mar: 5.0,
+                Apr: 10.0,
+                May: 14.0,
+                Jun: 18.0,
+                Jul: 21.8,
+                Aug: 23.0,
+                Sep: 20.0,
+                Oct: 15.0,
+                Nov: 9.0,
+                Dec: 4.0
+              },
+              yearly_averages_high: {
+                Jan: 8.0,
+                Feb: 9.0,
+                Mar: 12.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+              },
+              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+            }, {
+              uuid: Helpers.generateUUID(),
+              name: 'Tokyo',
+              geohash: 'xn76cydhz',
+              yearly_averages_low: {
+                Jan: 2.0,
+                Feb: 2.0,
+                Mar: 5.0,
+                Apr: 10.0,
+                May: 14.0,
+                Jun: 18.0,
+                Jul: 21.8,
+                Aug: 23.0,
+                Sep: 20.0,
+                Oct: 15.0,
+                Nov: 9.0,
+                Dec: 4.0
+              },
+              yearly_averages_high: {
+                Jan: 8.0,
+                Feb: 9.0,
+                Mar: 12.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+              },
+              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+            }
+          ]
+          for (let i = 0; i < locations.length; i++) {
+            await pg.table('locations').insert(locations[i]);
+          }
         });
     }
   });
 }
 initialiseTables();
 
-app.post('/addlocation', async (req, res) => {
-  const uuid = Helpers.generateUUID();
-  const location = {
-    uuid: uuid,
-    name: 'Tokyo',
-    geohash: 'xn76cydhz',
-    yearly_averages_low: {
-      Jan: 2.0,
-      Feb: 2.0,
-      Mar: 5.0,
-      Apr: 10.0,
-      May: 14.0,
-      Jun: 18.0,
-      Jul: 21.8,
-      Aug: 23.0,
-      Sep: 20.0,
-      Oct: 15.0,
-      Nov: 9.0,
-      Dec: 4.0
-    },
-    yearly_averages_high: {
-      Jan: 8.0,
-      Feb: 9.0,
-      Mar: 12.0,
-      Apr: 17.0,
-      May: 21.0,
-      Jun: 25.5,
-      Jul: 28.0,
-      Aug: 29.0,
-      Sep: 26.0,
-      Oct: 20.0,
-      Nov: 15.0,
-      Dec: 11.0
-    },
-    year: 2020
-  }
-  if (Helpers.checkGeohashFormat(location.geohash) == location.geohash && Helpers.checkGeohashLength(location.geohash) == location.geohash) {
-    pg('locations').insert(location)
+/**  add location
+ * @params req.body 
+ * @returns status 201 and inserted location when OK, status 404 when not OK
+ */
+app.post('/locations', async (req, res) => {
+  const data = req.body;
+  if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
+    const result = pg('locations')
+      .insert(data)
+      .returning('*')
       .then(function (result) {
-        res.status(201).send();
-        app.get()
+        res.status(201)
+        res.json({
+            res: result
+          })
+          .send();
       }).catch((e) => {
         console.log(e);
         res.status(404).send();
@@ -128,13 +242,17 @@ app.post('/addlocation', async (req, res) => {
   }
 });
 
-app.post('/removelocation', async (req, res) => {
-  const uuid = 'b2509760-3c6d-11eb-a0a4-a1cb35889479'
+/**  delete location
+ * @params uuid  
+ * @returns status 200 when OK, status 404 when not OK
+ */
+app.delete('/locations/:uuid', async (req, res) => {
+  const uuid = req.params.uuid
   pg('locations')
+    .del()
     .where({
       uuid: uuid
     })
-    .del()
     .then(function (result) {
       res.status(200).send();
     }).catch((e) => {
@@ -143,8 +261,12 @@ app.post('/removelocation', async (req, res) => {
     });
 });
 
-app.post('/updatelocation', async (req, res) => {
-  const uuid = '55fb81a0-3c6d-11eb-a3e5-c1be23be73e1'
+/**  update location
+ * @params req.body.uuid
+ * @returns status 200 and updated location when OK, status 404 when not OK
+ */
+app.put('/locations', async (req, res) => {
+  const uuid = req.body.uuid;
   pg('locations')
     .where({
       uuid: uuid
@@ -166,14 +288,22 @@ app.post('/updatelocation', async (req, res) => {
       }
     })
     .then(function (result) {
-      res.status(200).send();
+      res.status(200)
+      res.json({
+          res: result
+        })
+        .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
     });
 });
 
-app.get('/getlocation/:uuid', async (req, res) => {
+/**  get location by uuid
+ * @params uuid 
+ * @returns status 200 and location when OK, status 404 when not OK
+ */
+app.get('/locations/:uuid', async (req, res) => {
   pg('locations')
     .where({
       uuid: req.params.uuid
@@ -183,6 +313,108 @@ app.get('/getlocation/:uuid', async (req, res) => {
         res: result
       })
       res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+/**  get disaster by type
+ * @params type
+ * @returns status 200 and disasters of selected type when OK, status 404 when not OK
+ */
+app.get('/disasters/:type', async (req, res) => {
+  pg('disasters')
+    .where({
+      type: req.params.type
+    })
+    .then(result => {
+      res.json({
+        res: result
+      })
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+/**  get all disasters
+ * @params 
+ * @returns status 200 and all disasters when OK, status 404 when not OK
+ */
+app.get('/alldisasters', async (req, res) => {
+  pg.select('*')
+    .from('disasters')
+    .then(result => {
+      res.json({
+        res: result
+      })
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+/**  update disaster by uuid
+ * @params uuid  
+ * @returns status 200 and updated disaster when OK, status 404 when not OK
+ */
+app.put('/disasters/:uuid', async (req, res) => {
+  const uuid = req.params.uuid;
+  pg('disasters')
+    .where({
+      uuid: uuid
+    })
+    .update({
+      type: 'wildfire'
+    })
+    .then(function (result) {
+      res.json({
+        res: result
+      })
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+/**  delete disaster by uuid
+ * @params uuid  
+ * @returns status 200 when OK, status 404 when not OK
+ */
+app.delete('/disasters/:uuid', async (req, res) => {
+  const uuid = req.params.uuid;
+  pg('disasters')
+    .where({
+      uuid: uuid
+    })
+    .del()
+    .then(function (result) {
+      res.status(200).send();
+    }).catch((e) => {
+      console.log(e);
+      res.status(404).send();
+    });
+});
+
+/** add disaster
+ * @params uuid  
+ * @returns status 200 and inserted disaster when OK, status 404 when not OK
+ */
+app.post('/disasters', async (req, res) => {
+  const data = req.body;
+  pg('disasters')
+    .insert(data)
+    .returning('*')
+    .then(function (result) {
+      res.json({
+        res: result
+      })
+      res.status(201).send();
+      app.get()
     }).catch((e) => {
       console.log(e);
       res.status(404).send();

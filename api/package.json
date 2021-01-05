@@ -23,7 +23,7 @@
   "jest": {
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/src/__tests__/integration/"
+      "/__tests__/integration/"
     ]
   }
 }
