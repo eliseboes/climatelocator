@@ -43,6 +43,10 @@ const Helpers = {
     }
   },
 
+    /** * Checks if object contains all data*
+   * @param data - data to be checken *
+   * @returns true if data available and false if not available */
+
   checkDataComplete: (data) => {
     let keys = Object.keys(data);
     for (let i = 0; i < data.length; i++) {
