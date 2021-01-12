@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.91% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/110</span>
+                <span class='fraction'>49/112</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/10</span>
+                <span class='fraction'>8/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.29% </span>
+                <span class="strong">37.14% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>12/35</span>
+                <span class='fraction'>13/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.67% </span>
+                <span class="strong">44.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>45/108</span>
+                <span class='fraction'>49/110</span>
             </div>
         
             
@@ -481,7 +481,14 @@
 <a name='L422'></a><a href='#L422'>422</a>
 <a name='L423'></a><a href='#L423'>423</a>
 <a name='L424'></a><a href='#L424'>424</a>
-<a name='L425'></a><a href='#L425'>425</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<a name='L425'></a><a href='#L425'>425</a>
+<a name='L426'></a><a href='#L426'>426</a>
+<a name='L427'></a><a href='#L427'>427</a>
+<a name='L428'></a><a href='#L428'>428</a>
+<a name='L429'></a><a href='#L429'>429</a>
+<a name='L430'></a><a href='#L430'>430</a>
+<a name='L431'></a><a href='#L431'>431</a>
+<a name='L432'></a><a href='#L432'>432</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -707,9 +714,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -719,8 +732,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1134,17 +1148,24 @@ app.post('/locations', async (req, res) =&gt; {
   const data = req.body;
   <span class="missing-if-branch" title="else path not taken" >E</span>if (Helpers.checkGeohashFormat(data.geohash) == data.geohash &amp;&amp; Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     const result = pg('locations')
-      .insert(data)
-      .returning('*')
-      .then(function (result) {
-        res.status(201)
-        res.json({
-            res: result
-          })
-          .send();
-      }).catch(<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >        console.log(e);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(404).send();</span>
+      .select()
+      .where('name', data.name)
+      .then(function (rows) {
+        if (rows.length === 0) {
+          console.log(rows.length)
+            pg('locations')
+            .insert(data)
+            .returning('*')
+            .then(function (result) {
+              res.status(201)
+              res.json({
+                  res: result
+                })
+                .send();
+            })
+        }else{
+          res.status(404).send();
+        }
       });
   }
 });
@@ -1336,7 +1357,7 @@ module.exports = app;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jan 05 2021 16:52:19 GMT+0100 (GMT+01:00)
+                at Tue Jan 12 2021 16:00:48 GMT+0100 (GMT+01:00)
             </div>
         </div>
         <script src="../prettify.js"></script>
