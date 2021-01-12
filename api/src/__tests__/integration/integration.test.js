@@ -29,8 +29,8 @@ describe('POST /locations endpoint', () => {
         const disasterName = 'Hurricane Eta';
         const location = {
             uuid: Helpers.generateUUID(),
-            name: 'Florida',
-            geohash: 'dhvz72pzpyz',
+            name: 'Jamaica',
+            geohash: 'd71w2zvdd',
             yearly_averages_low: {
                 Jan: 2.0,
                 Feb: 2.0,
@@ -73,6 +73,65 @@ describe('POST /locations endpoint', () => {
                     await request.post('/locations')
                         .send(location)
                         .expect(201)
+                        .then((res) => {
+                            done()
+                        });
+                } catch (e) {
+                    if (e) console.log(e);
+                }
+            });
+    });
+});
+
+describe('POST /locations endpoint', () => {
+    test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
+        const disasterName = 'Hurricane Eta';
+        const location = {
+            uuid: Helpers.generateUUID(),
+            name: 'Tokyo',
+            geohash: 'xn76cydhz',
+            yearly_averages_low: {
+                Jan: 2.0,
+                Feb: 2.0,
+                Mar: 5.0,
+                Apr: 10.0,
+                May: 14.0,
+                Jun: 18.0,
+                Jul: 21.8,
+                Aug: 23.0,
+                Sep: 20.0,
+                Oct: 15.0,
+                Nov: 9.0,
+                Dec: 4.0
+            },
+            yearly_averages_high: {
+                Jan: 8.0,
+                Feb: 9.0,
+                Mar: 12.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+            }
+        }
+        pg.select('*')
+            .from('disasters')
+            .then(async (result) => {
+                let disasters = result;
+                disasters.forEach(disaster => {
+                    if (disasterName == disaster.name) {
+                        location.disaster_id = disaster.uuid;
+                    }
+                });
+                try {
+                    await request.post('/locations')
+                        .send(location)
+                        .expect(404)
                         .then((res) => {
                             done()
                         });
