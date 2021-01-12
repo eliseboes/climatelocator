@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const Helpers = require('./utils/helpers.js');
 const {
-  generateUUID
+  generateUUID,
+  checkDataComplete
 } = require('./utils/helpers.js');
 const {
   doesNotMatch
@@ -230,9 +231,8 @@ app.post('/locations', async (req, res) => {
       .select()
       .where('name', data.name)
       .then(function (rows) {
-        if (rows.length === 0) {
-          console.log(rows.length)
-            pg('locations')
+        if (rows.length === 0 && Helpers.checkDataComplete(data)) {
+          pg('locations')
             .insert(data)
             .returning('*')
             .then(function (result) {
@@ -242,7 +242,7 @@ app.post('/locations', async (req, res) => {
                 })
                 .send();
             })
-        }else{
+        } else {
           res.status(404).send();
         }
       });
