@@ -227,17 +227,24 @@ app.post('/locations', async (req, res) => {
   const data = req.body;
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     const result = pg('locations')
-      .insert(data)
-      .returning('*')
-      .then(function (result) {
-        res.status(201)
-        res.json({
-            res: result
-          })
-          .send();
-      }).catch((e) => {
-        console.log(e);
-        res.status(404).send();
+      .select()
+      .where('name', data.name)
+      .then(function (rows) {
+        if (rows.length === 0) {
+          console.log(rows.length)
+            pg('locations')
+            .insert(data)
+            .returning('*')
+            .then(function (result) {
+              res.status(201)
+              res.json({
+                  res: result
+                })
+                .send();
+            })
+        }else{
+          res.status(404).send();
+        }
       });
   }
 });

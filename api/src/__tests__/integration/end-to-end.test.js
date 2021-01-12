@@ -9,8 +9,8 @@ describe('DB connection test', () => {
                         let uuid = await request.post('/locations')
                             .send({
                                     uuid: Helpers.generateUUID(),
-                                    name: 'Jamaica',
-                                    geohash: 's7jjkf4x5tst',
+                                    name: 'San Fransisco',
+                                    geohash: 'c9gs1gzb4r26',
                                     yearly_averages_low: {
                                         Jan: 2.0,
                                         Feb: 2.0,
