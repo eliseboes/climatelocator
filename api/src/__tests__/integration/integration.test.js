@@ -172,7 +172,7 @@ describe('PUT /locations endpoint', () => {
 });
 
 describe('GET /locations endpoint', () => {
-     test('if /locations responds to 200 and returns a location from the database', async (done) => {
+     test('if GET /locations responds to 200 and returns a location from the database', async (done) => {
         try {
             await request.get(`/locations/${uuid}`)
                 .expect(200)
@@ -188,6 +188,19 @@ describe('GET /locations endpoint', () => {
                     expect(res.body.res[0]['geohash']).toBeDefined();
                     expect(res.body.res[0]['created_at']).toBeDefined();
                     expect(res.body.res[0]['updated_at']).toBeDefined();
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+    test('if GET /locations responds to 404 when passing the wrong ID and does not return a location', async (done) => {
+        try {
+            await request.get(`/locations/${uuid}5`)
+                .expect(404)
+                .then((res) => {
+                    console.log(res.body);
+                    expect(res.body).toStrictEqual({});
                     done()
                 });
         } catch (e) {
