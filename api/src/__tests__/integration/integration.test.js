@@ -2,13 +2,13 @@ const supertest = require('supertest');
 const Helpers = require('../../utils/helpers.js')
 const app = require('.././../server.js')
 const request = supertest(app);
-//let locations, connecteren met db + select + haal alle uuids op from locations *, random op uuids
 const pg = require('knex')({
     client: 'pg',
     version: '9.6',
     searchPath: ['knex', 'public'],
     connection: process.env.PG_CONNECTION_STRING ? process.env.PG_CONNECTION_STRING : 'postgres://example:example@localhost:5432/climatelocator'
 });
+const uuid = Helpers.generateUUID();
 
 describe('GET / endpoint', () => {
     test('check if / responds to 200', async (done) => {
@@ -28,7 +28,7 @@ describe('POST /locations endpoint', () => {
     test('if /locations responds to 201 and inserts a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
-            uuid: Helpers.generateUUID(),
+            uuid: uuid,
             name: 'Jamaica',
             geohash: 'd71w2zvdd',
             yearly_averages_low: {
@@ -81,10 +81,7 @@ describe('POST /locations endpoint', () => {
                 }
             });
     });
-});
-
-describe('POST /locations endpoint', () => {
-    test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
+     test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
             uuid: Helpers.generateUUID(),
@@ -142,25 +139,11 @@ describe('POST /locations endpoint', () => {
     });
 });
 
-describe('DELETE /locations endpoint', () => {
-    test('if /remove locations responds to 200 and deletes a location from the database', async (done) => {
-        try {
-            await request.delete('/locations/b36b0132-4c49-11eb-b596-0fdd0e82187f')
-                .expect(200)
-                .then((res) => {
-                    done()
-                });
-        } catch (e) {
-            if (e) console.log(e);
-        }
-    });
-});
-
 describe('PUT /locations endpoint', () => {
     test('if put /locations responds to 200 and updates a location from the database', async (done) => {
         const data = {
-            uuid: '75b5d0c0-4c4b-11eb-8f01-43d1e1dd6c98',
-            yearly_averages_high: {
+            uuid: uuid,
+            yearly_averages_low: {
                 Jan: 8.0,
                 Feb: 10.0,
                 Mar: 13.0,
@@ -189,9 +172,34 @@ describe('PUT /locations endpoint', () => {
 });
 
 describe('GET /locations endpoint', () => {
-    test('if /locations responds to 200 and returns a location from the database', async (done) => {
+     test('if /locations responds to 200 and returns a location from the database', async (done) => {
         try {
-            await request.get('/locations/75b5d0c0-4c4b-11eb-8f01-43d1e1dd6c98')
+            await request.get(`/locations/${uuid}`)
+                .expect(200)
+                .then((res) => {
+                    console.log(res.body);
+                    expect(res.body).not.toBeNull();
+                    expect(res.body.res[0]['id']).toBeDefined();
+                    expect(res.body.res[0]['uuid']).toBeDefined();
+                    expect(res.body.res[0]['name']).toBeDefined();
+                    expect(res.body.res[0]['yearly_averages_high']).toBeDefined();
+                    expect(res.body.res[0]['yearly_averages_low']).toBeDefined();
+                    expect(res.body.res[0]['disaster_id']).toBeDefined();
+                    expect(res.body.res[0]['geohash']).toBeDefined();
+                    expect(res.body.res[0]['created_at']).toBeDefined();
+                    expect(res.body.res[0]['updated_at']).toBeDefined();
+                    done()
+                });
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
+
+describe('DELETE /locations endpoint', () => {
+    test('if /remove locations responds to 200 and deletes a location from the database', async (done) => {
+        try {
+            await request.delete(`/locations/${uuid}`)
                 .expect(200)
                 .then((res) => {
                     done()
