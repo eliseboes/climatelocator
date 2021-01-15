@@ -99,6 +99,14 @@ describe('DB connection test', () => {
         done();
     })
 
+    test('if get request of join succeeds', async (done) => {
+        const response = await request.get(`/join`)
+        expect(response.status).toBe(200)
+        expect(response.body[0]['fatalities']).toBeDefined();
+        expect(response.body[0]['geohash']).toBeDefined();
+        done();
+    })
+
     test('if location is removed from database when passing correct uuid', async () => {
         try {
             const deletedLocation = await request.delete(`/locations/${uuid}`)
@@ -112,9 +120,7 @@ describe('DB connection test', () => {
     })
 
     test('if record is deleted in db', async (done) => {
-        const response = await pg.select('*').table('locations').where({
-            uuid: uuid
-        })
+        const response = await pg.select('*').table('locations').where({uuid: uuid})
         expect(response.length).toBe(0);
         done()
     })
