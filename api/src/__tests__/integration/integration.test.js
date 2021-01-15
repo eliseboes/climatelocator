@@ -215,6 +215,20 @@ describe('GET /locations endpoint', () => {
     });
 });
 
+describe('GET /join endpoint', () => {
+    test('if GET /join responds to 200 and returns a location and a disaster', async (done) => {
+        try {
+            const response = await request.get(`/join`)
+            expect(response.status).toBe(200)
+            expect(response.body[0]['fatalities']).toBeDefined();
+            expect(response.body[0]['geohash']).toBeDefined();
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
+
 describe('DELETE /locations endpoint', () => {
     test('if DELETE /locations responds to 404 and does not return a location when passing wrong uuid', async (done) => {
         try {
