@@ -127,13 +127,10 @@ describe('POST /locations endpoint', () => {
                     }
                 });
                 try {
-                    await request.post('/locations')
-                        .send(location)
-                        .expect(404)
-                        .then((res) => {
-                            expect(res.body).toStrictEqual({});
-                            done()
-                        });
+                    const response = await request.post('/locations').send(location)
+                    expect(response.status).toBe(404)
+                    expect(response.body).toStrictEqual({});
+                    done()
                 } catch (e) {
                     if (e) console.log(e);
                 }
