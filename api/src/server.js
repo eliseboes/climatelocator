@@ -303,6 +303,40 @@ app.get('/locations/:uuid', async (req, res) => {
     });
 });
 
+/** add disaster
+ * @params uuid  
+ * @returns status 200 and inserted disaster when OK, status 404 when not OK
+ */
+app.post('/disasters', async (req, res) => {
+  const data = req.body[0];
+  const location = req.body[1].location;
+  const result = pg('disasters')
+    .select()
+    .where('name', data.name)
+    .then(function (rows) {
+      if (rows.length === 0 && Helpers.checkDataComplete(data)) {
+        pg('locations')
+          .select('*')
+          .where({
+            name: location
+          })
+          .then(result => {
+            data.location_id = result[0].uuid;
+            pg('disasters')
+              .insert(data)
+              .returning('*')
+              .then(function (result) {
+                res.status(201)
+                res.json(result)
+                  .send();
+              })
+          })
+      } else {
+        res.status(404).send();
+      }
+    });
+});
+
 /**  get disaster by type
  * @params type
  * @returns status 200 and disasters of selected type when OK, status 404 when not OK
@@ -357,44 +391,11 @@ app.delete('/disasters/:uuid', async (req, res) => {
     .returning('*')
     .del()
     .then(function (result) {
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
-    });
-});
-
-/** add disaster
- * @params uuid  
- * @returns status 200 and inserted disaster when OK, status 404 when not OK
- */
-app.post('/disasters', async (req, res) => {
-  const data = req.body[0];
-  const location = req.body[1].location;
-  const result = pg('disasters')
-    .select()
-    .where('name', data.name)
-    .then(function (rows) {
-      if (rows.length === 0 && Helpers.checkDataComplete(data)) {
-        pg('locations')
-          .select('*')
-          .where({
-            name: location
-          })
-          .then(result => {
-            data.location_id = result[0].uuid;
-            pg('disasters')
-              .insert(data)
-              .returning('*')
-              .then(function (result) {
-                res.status(201)
-                res.json(result)
-                  .send();
-              })
-          })
-      } else {
-        res.status(404).send();
-      }
     });
 });
 /**

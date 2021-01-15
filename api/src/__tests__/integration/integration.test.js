@@ -165,27 +165,27 @@ describe('POST /disasters endpoint', () => {
 //     });
 // });
 
-// describe('DELETE /locations endpoint', () => {
-//     test('if DELETE /locations responds to 404 and does not return a location when passing wrong uuid', async (done) => {
-//         try {
-//             const deletedLocation = await request.delete(`/locations/${uuid}6`)
-//             expect(deletedLocation.status).toBe(404)
-//             expect(deletedLocation.body).toStrictEqual({})
-//             done()
-//         } catch (e) {
-//             if (e) console.log(e);
-//         }
-//     });
-//     test('if DELETE /locations responds to 200 and deletes a location from the database', async (done) => {
-//         try {
-//             const deletedDisaster = await request.delete(`/disasterss/${uuid}`)
-//             expect(deletedDisaster.status).toBe(200)
-//             expect(deletedDisaster.body).toHaveLength(1)
-//             expect(deletedDisaster.body[0].name).toStrictEqual('Jamaica')
-//             expect(deletedDisaster.body[0].geohash).toStrictEqual('d71w2zvdd')
-//             done()
-//         } catch (e) {
-//             if (e) console.log(e);
-//         }
-//     });
-// });
+describe('DELETE /disasters endpoint', () => {
+    test('if DELETE /disaster responds to 404 and does not return a disaster when passing wrong uuid', async (done) => {
+        try {
+            const deletedDisaster = await request.delete(`/disasters/${uuid}6`)
+            expect(deletedDisaster.status).toBe(404)
+            expect(deletedDisaster.body).toStrictEqual({})
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+    test('if DELETE /disasters responds to 200 and deletes a disaster from the database', async (done) => {
+        try {
+            const deletedDisaster = await request.delete(`/disasters/${uuid}`)
+            expect(deletedDisaster.status).toBe(200)
+            expect(deletedDisaster.body).toHaveLength(1)
+            expect(deletedDisaster.body[0].name).toStrictEqual('Typhoon Hagibis')
+            expect(deletedDisaster.body[0].fatalities).toStrictEqual('98')
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
