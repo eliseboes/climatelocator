@@ -60,26 +60,24 @@ describe('POST /locations endpoint', () => {
                 Dec: 11.0
             }
         }
-        pg.select('*')
-            .from('disasters')
-            .then(async (result) => {
-                let disasters = result;
-                disasters.forEach(disaster => {
-                    if (disasterName == disaster.name) {
-                        location.disaster_id = disaster.uuid;
-                    }
-                });
-                try {
-                    const insertedLocation = await request.post('/locations').send(location)
-                    expect(insertedLocation.status).toBe(201)
-                    expect(insertedLocation.body).toHaveLength(1)
-                    expect(insertedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
-                    expect(insertedLocation.body[0].name).toStrictEqual('Jamaica')
-                    done()
-                } catch (e) {
-                    if (e) console.log(e);
-                }
-            });
+        try {
+            const insertedLocation = await request.post('/locations').send(location)
+            expect(insertedLocation.status).toBe(201)
+            expect(insertedLocation.body).toHaveLength(1)
+            expect(insertedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
+            expect(insertedLocation.body[0].name).toStrictEqual('Jamaica')
+            pg('disasters')
+                .where({
+                    name: disasterName
+                })
+                .update({
+                    location_id: location.uuid
+                })
+                .then(result =>{})
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
     });
     test('if POST /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
@@ -116,24 +114,14 @@ describe('POST /locations endpoint', () => {
                 Dec: 11.0
             }
         }
-        pg.select('*')
-            .from('disasters')
-            .then(async (result) => {
-                let disasters = result;
-                disasters.forEach(disaster => {
-                    if (disasterName == disaster.name) {
-                        location.disaster_id = disaster.uuid;
-                    }
-                });
-                try {
-                    const insertedLocation = await request.post('/locations').send(location)
-                    expect(insertedLocation.status).toBe(404)
-                    expect(insertedLocation.body).toStrictEqual({});
-                    done()
-                } catch (e) {
-                    if (e) console.log(e);
-                }
-            });
+        try {
+            const insertedLocation = await request.post('/locations').send(location)
+            expect(insertedLocation.status).toBe(404)
+            expect(insertedLocation.body).toStrictEqual({});
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
     });
 });
 
@@ -207,7 +195,6 @@ describe('GET /locations endpoint', () => {
             expect(receivedLocation.body[0]['name']).toBeDefined();
             expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
             expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
-            expect(receivedLocation.body[0]['disaster_id']).toBeDefined();
             expect(receivedLocation.body[0]['geohash']).toBeDefined();
             expect(receivedLocation.body[0]['created_at']).toBeDefined();
             expect(receivedLocation.body[0]['updated_at']).toBeDefined();
@@ -231,7 +218,7 @@ describe('GET /locations endpoint', () => {
 describe('DELETE /locations endpoint', () => {
     test('if DELETE /locations responds to 404 and does not return a location when passing wrong uuid', async (done) => {
         try {
-            const deletedLocation =  await request.delete(`/locations/${uuid}6`)
+            const deletedLocation = await request.delete(`/locations/${uuid}6`)
             expect(deletedLocation.status).toBe(404)
             expect(deletedLocation.body).toStrictEqual({})
             done()
@@ -241,7 +228,7 @@ describe('DELETE /locations endpoint', () => {
     });
     test('if DELETE /locations responds to 200 and deletes a location from the database', async (done) => {
         try {
-            const deletedLocation =  await request.delete(`/locations/${uuid}`)
+            const deletedLocation = await request.delete(`/locations/${uuid}`)
             expect(deletedLocation.status).toBe(200)
             expect(deletedLocation.body).toHaveLength(1)
             expect(deletedLocation.body[0].name).toStrictEqual('Jamaica')

@@ -54,6 +54,7 @@ async function initialiseTables() {
           table.string('fatalities');
           table.string('missing');
           table.string('damage');
+          table.string('location_id')
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -106,7 +107,6 @@ async function initialiseTables() {
           table.string('geohash');
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
-          table.string('disaster_id');
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -142,8 +142,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac0-4dda-11eb-b21e-6504195ef07a'
+              }
             },
             {
               uuid: Helpers.generateUUID(),
@@ -176,8 +175,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+              }
             }, {
               uuid: Helpers.generateUUID(),
               name: 'Tokyo',
@@ -209,8 +207,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+              }
             }
           ]
           for (let i = 0; i < locations.length; i++) {
@@ -299,9 +296,8 @@ app.put('/locations', async (req, res) => {
  */
 app.get('/locations/:uuid', async (req, res) => {
   pg('locations')
-    .where({
-      uuid: req.params.uuid
-    })
+  .select('*')
+    .where({uuid: req.params.uuid})
     .then(result => {
       res.json(result)
       res.status(200).send();
@@ -391,5 +387,18 @@ app.post('/disasters', async (req, res) => {
     });
 });
 
+// /**
+// * @param
+// * @returns
+// */
+// app.get('/join', async (req, res) => {
+//   await DatabaseHelper
+//     .table('items')
+//     .join('lists', DatabaseHelper.raw('location.disaster_id::varchar'), DatabaseHelper.raw('lists.uuid::varchar'))
+//     .select('lists.*', 'items.*')
+//     .then((data) => {
+//       res.send(data)
+//     })
+// })
 
 module.exports = app;
