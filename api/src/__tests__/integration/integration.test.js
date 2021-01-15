@@ -70,12 +70,11 @@ describe('POST /locations endpoint', () => {
                     }
                 });
                 try {
-                    const response = await request.post('/locations').send(location)
-                    const insertedLocation = response.body.res;
-                    expect(response.status).toBe(201)
-                    expect(insertedLocation).toHaveLength(1)
-                    expect(insertedLocation[0].geohash).toStrictEqual('d71w2zvdd')
-                    expect(insertedLocation[0].name).toStrictEqual('Jamaica')
+                    const insertedLocation = await request.post('/locations').send(location)
+                    expect(insertedLocation.status).toBe(201)
+                    expect(insertedLocation.body).toHaveLength(1)
+                    expect(insertedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
+                    expect(insertedLocation.body[0].name).toStrictEqual('Jamaica')
                     done()
                 } catch (e) {
                     if (e) console.log(e);
@@ -127,9 +126,9 @@ describe('POST /locations endpoint', () => {
                     }
                 });
                 try {
-                    const response = await request.post('/locations').send(location)
-                    expect(response.status).toBe(404)
-                    expect(response.body).toStrictEqual({});
+                    const insertedLocation = await request.post('/locations').send(location)
+                    expect(insertedLocation.status).toBe(404)
+                    expect(insertedLocation.body).toStrictEqual({});
                     done()
                 } catch (e) {
                     if (e) console.log(e);
@@ -158,10 +157,9 @@ describe('PUT /locations endpoint', () => {
             }
         }
         try {
-            const response = await request.put('/locations').send(dataToUpdate)
-            const updatedLocation = response.body;
-            expect(response.status).toBe(404)
-            expect(updatedLocation).toStrictEqual({})
+            const updatedLocation = await request.put('/locations').send(dataToUpdate)
+            expect(updatedLocation.status).toBe(404)
+            expect(updatedLocation.body).toStrictEqual({})
             done()
         } catch (e) {
             if (e) console.log(e);
@@ -186,12 +184,11 @@ describe('PUT /locations endpoint', () => {
             }
         }
         try {
-            const response = await request.put('/locations').send(dataToUpdate)
-            const updatedLocation = response.body;
-            expect(response.status).toBe(200)
-            expect(updatedLocation).toHaveLength(1)
-            expect(updatedLocation[0].name).toStrictEqual('Jamaica')
-            expect(updatedLocation[0].geohash).toStrictEqual('d71w2zvdd')
+            const updatedLocation = await request.put('/locations').send(dataToUpdate)
+            expect(updatedLocation.status).toBe(200)
+            expect(updatedLocation.body).toHaveLength(1)
+            expect(updatedLocation.body[0].name).toStrictEqual('Jamaica')
+            expect(updatedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
             done()
         } catch (e) {
             if (e) console.log(e);
@@ -202,33 +199,29 @@ describe('PUT /locations endpoint', () => {
 describe('GET /locations endpoint', () => {
     test('if GET /locations responds to 200 and returns a location from the database', async (done) => {
         try {
-            await request.get(`/locations/${uuid}`)
-                .expect(200)
-                .then((res) => {
-                    expect(res.body).not.toBeNull();
-                    expect(res.body.res[0]['id']).toBeDefined();
-                    expect(res.body.res[0]['uuid']).toBeDefined();
-                    expect(res.body.res[0]['name']).toBeDefined();
-                    expect(res.body.res[0]['yearly_averages_high']).toBeDefined();
-                    expect(res.body.res[0]['yearly_averages_low']).toBeDefined();
-                    expect(res.body.res[0]['disaster_id']).toBeDefined();
-                    expect(res.body.res[0]['geohash']).toBeDefined();
-                    expect(res.body.res[0]['created_at']).toBeDefined();
-                    expect(res.body.res[0]['updated_at']).toBeDefined();
-                    done()
-                });
+            const receivedLocation = await request.get(`/locations/${uuid}`)
+            expect(receivedLocation.status).toBe(200)
+            expect(receivedLocation.body).not.toBeNull();
+            expect(receivedLocation.body[0]['id']).toBeDefined();
+            expect(receivedLocation.body[0]['uuid']).toBeDefined();
+            expect(receivedLocation.body[0]['name']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
+            expect(receivedLocation.body[0]['disaster_id']).toBeDefined();
+            expect(receivedLocation.body[0]['geohash']).toBeDefined();
+            expect(receivedLocation.body[0]['created_at']).toBeDefined();
+            expect(receivedLocation.body[0]['updated_at']).toBeDefined();
+            done()
         } catch (e) {
             if (e) console.log(e);
         }
     });
     test('if GET /locations responds to 404 when passing the wrong ID and does not return a location', async (done) => {
         try {
-            await request.get(`/locations/${uuid}5`)
-                .expect(404)
-                .then((res) => {
-                    expect(res.body).toStrictEqual({});
-                    done()
-                });
+            const receivedLocation = await request.get(`/locations/${uuid}5`)
+            expect(receivedLocation.status).toBe(404)
+            expect(receivedLocation.body).toStrictEqual({});
+            done()
         } catch (e) {
             if (e) console.log(e);
         }
