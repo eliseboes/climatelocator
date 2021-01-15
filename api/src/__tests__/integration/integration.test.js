@@ -139,6 +139,34 @@ describe('POST /locations endpoint', () => {
 });
 
 describe('PUT /locations endpoint', () => {
+    test('if PUT /locations responds to 404 and does not return a location from the database when passing the wrong uuid', async (done) => {
+        const dataToUpdate = {
+            uuid: `${uuid}5`,
+            yearly_averages_low: {
+                Jan: 8.0,
+                Feb: 10.0,
+                Mar: 13.0,
+                Apr: 17.0,
+                May: 21.0,
+                Jun: 25.5,
+                Jul: 28.0,
+                Aug: 29.0,
+                Sep: 26.0,
+                Oct: 20.0,
+                Nov: 15.0,
+                Dec: 11.0
+            }
+        }
+        try {
+            const response = await request.put('/locations').send(dataToUpdate)
+            const updatedLocation = response.body;
+            expect(response.status).toBe(404)
+            expect(updatedLocation).toStrictEqual({})
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
     test('if put /locations responds to 200 and updates a location from the database', async (done) => {
         const dataToUpdate = {
             uuid: uuid,
