@@ -2,57 +2,140 @@ const supertest = require('supertest');
 const app = require('../../server.js');
 const request = supertest(app);
 const Helpers = require('../../utils/helpers.js');
+const pg = require('knex')({
+    client: 'pg',
+    version: '9.6',
+    searchPath: ['knex', 'public'],
+    connection: process.env.PG_CONNECTION_STRING ? process.env.PG_CONNECTION_STRING : 'postgres://example:example@localhost:5432/climatelocator'
+});
 
 describe('DB connection test', () => {
-            test('full connection test', async () => {
-                    try {
-                        let uuid = await request.post('/locations')
-                            .send({
-                                    uuid: Helpers.generateUUID(),
-                                    name: 'Jamaica',
-                                    geohash: 's7jjkf4x5tst',
-                                    yearly_averages_low: {
-                                        Jan: 2.0,
-                                        Feb: 2.0,
-                                        Mar: 5.0,
-                                        Apr: 10.0,
-                                        May: 14.0,
-                                        Jun: 18.0,
-                                        Jul: 21.8,
-                                        Aug: 23.0,
-                                        Sep: 20.0,
-                                        Oct: 15.0,
-                                        Nov: 9.0,
-                                        Dec: 4.0
-                                    },
-                                    yearly_averages_high: {
-                                        Jan: 8.0,
-                                        Feb: 9.0,
-                                        Mar: 12.0,
-                                        Apr: 17.0,
-                                        May: 21.0,
-                                        Jun: 25.5,
-                                        Jul: 28.0,
-                                        Aug: 29.0,
-                                        Sep: 26.0,
-                                        Oct: 20.0,
-                                        Nov: 15.0,
-                                        Dec: 11.0
-                                    }
-                                })
-                                .expect(201)
-                                .then((response) => {
-                                    const parsed = JSON.parse(response.text)
-                                    return parsed.res[0].uuid
-                                }).catch((error) => {
-                                    console.log(error)
-                                });
-                                const getRequest = await request.get(`/locations/${uuid}`).expect(200)
-                                const requestParse = JSON.parse(getRequest.text)
-                                expect(requestParse.res).toHaveLength(1)
-                            }
-                        catch (error) {
-                            throw error
-                        }
-                    })
-            })
+    let uuid = Helpers.generateUUID();
+    const location = [{
+        uuid: uuid,
+        name: 'San Fransisco',
+        geohash: 'c9gs1gzb4r26',
+        yearly_averages_low: {
+            Jan: 2.0,
+            Feb: 2.0,
+            Mar: 5.0,
+            Apr: 10.0,
+            May: 14.0,
+            Jun: 18.0,
+            Jul: 21.8,
+            Aug: 23.0,
+            Sep: 20.0,
+            Oct: 15.0,
+            Nov: 9.0,
+            Dec: 4.0
+        },
+        yearly_averages_high: {
+            Jan: 8.0,
+            Feb: 9.0,
+            Mar: 12.0,
+            Apr: 17.0,
+            May: 21.0,
+            Jun: 25.5,
+            Jul: 28.0,
+            Aug: 29.0,
+            Sep: 26.0,
+            Oct: 20.0,
+            Nov: 15.0,
+            Dec: 11.0
+        }
+    }, {
+        disasterName: 'Typhoon Hagibis'
+    }]
+
+    test('if location is added to the database if does not exsists', async () => {
+        try {
+            const response = await request.post('/locations').send(location)
+            expect(response.status).toBe(201)
+            expect(response.body[0]['id']).toBeDefined();
+            expect(response.body[0]['uuid']).toBeDefined();
+            expect(response.body[0]['name']).toBeDefined();
+            expect(response.body[0]['yearly_averages_high']).toBeDefined();
+            expect(response.body[0]['yearly_averages_low']).toBeDefined();
+            expect(response.body[0]['geohash']).toBeDefined();
+            uuid = response.body[0].uuid;
+        } catch (error) {
+            throw error
+        }
+    })
+
+    test('if location is not added to the database if already exsists', async () => {
+        try {
+            const response = await request.post('/locations').send(location)
+            expect(response.status).toBe(404)
+            expect(response.body).toStrictEqual({})
+        } catch (error) {
+            throw error
+        }
+    })
+
+    test('if get request succeeds', async (done) => {
+        try {
+            const receivedLocation = await request.get(`/locations/${uuid}`)
+            expect(receivedLocation.status).toBe(200)
+            expect(receivedLocation.body).not.toBeNull();
+            expect(receivedLocation.body[0]['name']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
+            expect(receivedLocation.body[0]['geohash']).toBeDefined();
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+
+    test('if put request succeeds', async (done) => {
+        const response = await request.put(`/locations`).send({
+            uuid: uuid,
+            name: 'California'
+        })
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('geohash')
+        expect(response.body[0]).toHaveProperty('name', 'California')
+        done();
+    })
+
+    test('if get request of join succeeds', async (done) => {
+        const response = await request.get(`/join`)
+        expect(response.status).toBe(200)
+        expect(response.body[0]['fatalities']).toBeDefined();
+        expect(response.body[0]['geohash']).toBeDefined();
+        done();
+    })
+
+    test('if location_id is added to disaster after join', async (done) => {
+        const response = await pg.select('*').table('disasters').where({location_id: uuid})
+        expect(response.length).toBeGreaterThan(0);
+        done()
+    })
+
+    test('if location is removed from database when passing correct uuid', async () => {
+        try {
+            const deletedLocation = await request.delete(`/locations/${uuid}`)
+            expect(deletedLocation.status).toBe(200)
+            expect(deletedLocation.body).toHaveLength(1)
+            expect(deletedLocation.body[0].name).toStrictEqual('California')
+            expect(deletedLocation.body[0].geohash).toStrictEqual('c9gs1gzb4r26')
+        } catch (error) {
+            throw error
+        }
+    })
+
+    test('if record is deleted in db', async (done) => {
+        const response = await pg.select('*').table('locations').where({uuid: uuid})
+        expect(response.length).toBe(0);
+        done()
+    })
+
+    test('if location_id of deleted location is removed in disaster', async (done) => {
+        const response = await pg.select('*').table('disasters').where({location_id: uuid})
+        expect(response.length).toBe(0);
+        done()
+    })
+
+
+})

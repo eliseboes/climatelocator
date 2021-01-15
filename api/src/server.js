@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const http = require('http');
 const Helpers = require('./utils/helpers.js');
 const {
-  generateUUID
+  generateUUID,
+  checkDataComplete
 } = require('./utils/helpers.js');
 const {
   doesNotMatch
@@ -51,9 +52,9 @@ async function initialiseTables() {
           table.string('name');
           table.string('type');
           table.string('fatalities');
-          table.string('injuries');
           table.string('missing');
           table.string('damage');
+          table.string('location_id')
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -70,12 +71,15 @@ async function initialiseTables() {
               name: '2020 East Africa Floods',
               type: 'flood',
               fatalities: 453,
-              missing: 8
+              missing: 8,
+              damage: 360000000
             }, {
               uuid: Helpers.generateUUID(),
               name: '2019 European Heat Wave',
               type: 'heat wave',
-              fatalities: 869
+              fatalities: 869,
+              missing: 10,
+              damage: 3560000000
             },
             {
               uuid: Helpers.generateUUID(),
@@ -103,7 +107,6 @@ async function initialiseTables() {
           table.string('geohash');
           table.string('yearly_averages_low');
           table.string('yearly_averages_high');
-          table.string('disaster_id');
           table.timestamps(true, true);
         })
         .then(async () => {
@@ -139,8 +142,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac0-4dda-11eb-b21e-6504195ef07a'
+              }
             },
             {
               uuid: Helpers.generateUUID(),
@@ -173,8 +175,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+              }
             }, {
               uuid: Helpers.generateUUID(),
               name: 'Tokyo',
@@ -206,8 +207,7 @@ async function initialiseTables() {
                 Oct: 20.0,
                 Nov: 15.0,
                 Dec: 11.0
-              },
-              disaster_id: 'a34a0ac1-4dda-11eb-b21e-6504195ef07a'
+              }
             }
           ]
           for (let i = 0; i < locations.length; i++) {
@@ -224,20 +224,33 @@ initialiseTables();
  * @returns status 201 and inserted location when OK, status 404 when not OK
  */
 app.post('/locations', async (req, res) => {
-  const data = req.body;
+  const data = req.body[0];
+  const disasterName = req.body[1].disasterName
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     const result = pg('locations')
-      .insert(data)
-      .returning('*')
-      .then(function (result) {
-        res.status(201)
-        res.json({
-            res: result
-          })
-          .send();
-      }).catch((e) => {
-        console.log(e);
-        res.status(404).send();
+      .select()
+      .where('name', data.name)
+      .then(function (rows) {
+        if (rows.length === 0 && Helpers.checkDataComplete(data)) {
+          pg('locations')
+            .insert(data)
+            .returning('*')
+            .then(function (result) {
+              res.status(201)
+              res.json(result)
+                .send();
+            })
+          pg('disasters')
+            .where({
+              name: disasterName
+            })
+            .update({
+              location_id: data.uuid
+            })
+            .then(result => {})
+        } else {
+          res.status(404).send();
+        }
       });
   }
 });
@@ -253,7 +266,17 @@ app.delete('/locations/:uuid', async (req, res) => {
     .where({
       uuid: uuid
     })
+    .returning('*')
     .then(function (result) {
+      pg('disasters')
+        .where({
+          location_id: uuid
+        })
+        .update({
+          location_id: null
+        })
+        .then(result => {})
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -267,31 +290,16 @@ app.delete('/locations/:uuid', async (req, res) => {
  */
 app.put('/locations', async (req, res) => {
   const uuid = req.body.uuid;
+  const dataToUpdate = req.body;
   pg('locations')
     .where({
       uuid: uuid
     })
-    .update({
-      yearly_averages_high: {
-        Jan: 8.0,
-        Feb: 10.0,
-        Mar: 13.0,
-        Apr: 17.0,
-        May: 21.0,
-        Jun: 25.5,
-        Jul: 28.0,
-        Aug: 29.0,
-        Sep: 26.0,
-        Oct: 20.0,
-        Nov: 15.0,
-        Dec: 11.0
-      }
-    })
+    .update(dataToUpdate)
+    .returning('*')
     .then(function (result) {
       res.status(200)
-      res.json({
-          res: result
-        })
+      res.json(result)
         .send();
     }).catch((e) => {
       console.log(e);
@@ -305,13 +313,12 @@ app.put('/locations', async (req, res) => {
  */
 app.get('/locations/:uuid', async (req, res) => {
   pg('locations')
+    .select('*')
     .where({
       uuid: req.params.uuid
     })
     .then(result => {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -329,27 +336,7 @@ app.get('/disasters/:type', async (req, res) => {
       type: req.params.type
     })
     .then(result => {
-      res.json({
-        res: result
-      })
-      res.status(200).send();
-    }).catch((e) => {
-      console.log(e);
-      res.status(404).send();
-    });
-});
-
-/**  get all disasters
- * @params 
- * @returns status 200 and all disasters when OK, status 404 when not OK
- */
-app.get('/alldisasters', async (req, res) => {
-  pg.select('*')
-    .from('disasters')
-    .then(result => {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -370,10 +357,9 @@ app.put('/disasters/:uuid', async (req, res) => {
     .update({
       type: 'wildfire'
     })
+    .returning('*')
     .then(function (result) {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -391,6 +377,7 @@ app.delete('/disasters/:uuid', async (req, res) => {
     .where({
       uuid: uuid
     })
+    .returning('*')
     .del()
     .then(function (result) {
       res.status(200).send();
@@ -410,9 +397,7 @@ app.post('/disasters', async (req, res) => {
     .insert(data)
     .returning('*')
     .then(function (result) {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(201).send();
       app.get()
     }).catch((e) => {
@@ -421,5 +406,18 @@ app.post('/disasters', async (req, res) => {
     });
 });
 
+/**
+ * @param
+ * @returns
+ */
+app.get('/join', async (req, res) => {
+  await pg.table('disasters')
+    .join('locations', pg.raw('disasters.location_id::varchar'), pg.raw('locations.uuid::varchar'))
+    .select('locations.*', 'disasters.*')
+    .then((data) => {
+      res.status(200)
+      res.send(data)
+    })
+})
 
 module.exports = app;
