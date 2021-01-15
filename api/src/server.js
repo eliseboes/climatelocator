@@ -80,14 +80,6 @@ async function initialiseTables() {
               fatalities: 869,
               missing: 10,
               damage: 3560000000
-            },
-            {
-              uuid: Helpers.generateUUID(),
-              name: 'Typhoon Hagibis',
-              type: 'hurricane',
-              fatalities: 98,
-              missing: 7,
-              damage: 15000000000
             }
           ]
           console.log('created table disasters');
@@ -240,13 +232,6 @@ app.post('/locations', async (req, res) => {
               res.json(result)
                 .send();
             })
-          pg('disasters')
-            .where({
-              name: disasterName
-            })
-            .update({
-              location_id: data.uuid
-            })
             .then(result => {})
         } else {
           res.status(404).send();
@@ -268,14 +253,6 @@ app.delete('/locations/:uuid', async (req, res) => {
     })
     .returning('*')
     .then(function (result) {
-      pg('disasters')
-        .where({
-          location_id: uuid
-        })
-        .update({
-          location_id: null
-        })
-        .then(result => {})
       res.json(result)
       res.status(200).send();
     }).catch((e) => {
@@ -392,20 +369,34 @@ app.delete('/disasters/:uuid', async (req, res) => {
  * @returns status 200 and inserted disaster when OK, status 404 when not OK
  */
 app.post('/disasters', async (req, res) => {
-  const data = req.body;
-  pg('disasters')
-    .insert(data)
-    .returning('*')
-    .then(function (result) {
-      res.json(result)
-      res.status(201).send();
-      app.get()
-    }).catch((e) => {
-      console.log(e);
-      res.status(404).send();
+  const data = req.body[0];
+  const location = req.body[1].location;
+  const result = pg('disasters')
+    .select()
+    .where('name', data.name)
+    .then(function (rows) {
+      if (rows.length === 0 && Helpers.checkDataComplete(data)) {
+        pg('locations')
+          .select('*')
+          .where({
+            name: location
+          })
+          .then(result => {
+            data.location_id = result[0].uuid;
+            pg('disasters')
+              .insert(data)
+              .returning('*')
+              .then(function (result) {
+                res.status(201)
+                res.json(result)
+                  .send();
+              })
+          })
+      } else {
+        res.status(404).send();
+      }
     });
 });
-
 /**
  * @param
  * @returns
