@@ -131,4 +131,11 @@ describe('DB connection test', () => {
         done()
     })
 
+    test('if location_id of deleted location is removed in disaster', async (done) => {
+        const response = await pg.select('*').table('disasters').where({location_id: uuid})
+        expect(response.length).toBe(0);
+        done()
+    })
+
+
 })
