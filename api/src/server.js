@@ -259,6 +259,14 @@ app.delete('/locations/:uuid', async (req, res) => {
     })
     .returning('*')
     .then(function (result) {
+      pg('disasters')
+      .where({
+          location_id: uuid
+      })
+      .update({
+          location_id: null
+      })
+      .then(result =>{})
       res.json(result)
       res.status(200).send();
     }).catch((e) => {
