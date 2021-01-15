@@ -260,7 +260,9 @@ app.delete('/locations/:uuid', async (req, res) => {
     .where({
       uuid: uuid
     })
+    .returning('*')
     .then(function (result) {
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -327,22 +329,6 @@ app.get('/disasters/:type', async (req, res) => {
     });
 });
 
-/**  get all disasters
- * @params 
- * @returns status 200 and all disasters when OK, status 404 when not OK
- */
-app.get('/alldisasters', async (req, res) => {
-  pg.select('*')
-    .from('disasters')
-    .then(result => {
-      res.json(result)
-      res.status(200).send();
-    }).catch((e) => {
-      console.log(e);
-      res.status(404).send();
-    });
-});
-
 /**  update disaster by uuid
  * @params uuid  
  * @returns status 200 and updated disaster when OK, status 404 when not OK
@@ -376,6 +362,7 @@ app.delete('/disasters/:uuid', async (req, res) => {
     .where({
       uuid: uuid
     })
+    .returning('*')
     .del()
     .then(function (result) {
       res.status(200).send();
