@@ -51,7 +51,6 @@ describe('DB connection test', () => {
     test('if get request succeeds', async (done) => {
         try {
             const response = await request.get(`/disasters/${uuid}`)
-            console.log(response.body)
             expect(response.status).toBe(200)
             expect(response.body).not.toBeNull();
             expect(response.body[0]['uuid']).toBeDefined();
@@ -65,22 +64,30 @@ describe('DB connection test', () => {
     });
 
     test('if put request succeeds', async (done) => {
-        const response = await request.put(`/disasters`).send({
-            uuid: uuid,
-            fatalities: '22'
-        })
-        expect(response.status).toBe(200)
-        expect(response.body[0]).toHaveProperty('fatalities', '22')
-        done();
+        try {
+            const response = await request.put(`/disasters`).send({
+                uuid: uuid,
+                fatalities: '22'
+            })
+            expect(response.status).toBe(200)
+            expect(response.body[0]).toHaveProperty('fatalities', '22')
+            done();
+        } catch (e) {
+            if (e) console.log(e);
+        }
     })
 
-    // test('if get request of join succeeds', async (done) => {
-    //     const response = await request.get(`/join`)
-    //     expect(response.status).toBe(200)
-    //     expect(response.body[0]['fatalities']).toBeDefined();
-    //     expect(response.body[0]['geohash']).toBeDefined();
-    //     done();
-    // })
+    test('if get request of join succeeds', async (done) => {
+        try {
+            const response = await request.get(`/join`)
+            expect(response.status).toBe(200)
+            expect(response.body[0]['fatalities']).toBeDefined();
+            expect(response.body[0]['geohash']).toBeDefined();
+            done();
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    })
 
     test('if disaster is removed from database when passing correct uuid', async () => {
         try {
@@ -95,10 +102,14 @@ describe('DB connection test', () => {
     })
 
     test('if record is deleted in db', async (done) => {
-        const response = await pg.select('*').table('disasters').where({uuid: uuid})
-        expect(response.length).toBe(0);
-        done()
+        try {
+            const response = await pg.select('*').table('disasters').where({
+                uuid: uuid
+            })
+            expect(response.length).toBe(0);
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
     })
-
-
 })
