@@ -239,9 +239,7 @@ app.post('/locations', async (req, res) => {
             .returning('*')
             .then(function (result) {
               res.status(201)
-              res.json({
-                  res: result
-                })
+              res.json(result)
                 .send();
             })
         } else {
@@ -303,9 +301,7 @@ app.get('/locations/:uuid', async (req, res) => {
       uuid: req.params.uuid
     })
     .then(result => {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -323,9 +319,7 @@ app.get('/disasters/:type', async (req, res) => {
       type: req.params.type
     })
     .then(result => {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -341,9 +335,7 @@ app.get('/alldisasters', async (req, res) => {
   pg.select('*')
     .from('disasters')
     .then(result => {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
@@ -403,9 +395,7 @@ app.post('/disasters', async (req, res) => {
     .insert(data)
     .returning('*')
     .then(function (result) {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(201).send();
       app.get()
     }).catch((e) => {
