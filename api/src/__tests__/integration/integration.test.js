@@ -25,7 +25,7 @@ describe('GET / endpoint', () => {
 });
 
 describe('POST /locations endpoint', () => {
-    test('if /locations responds to 201 and inserts a location into the database', async (done) => {
+    test('if POST /locations responds to 201 and inserts a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
             uuid: uuid,
@@ -81,7 +81,7 @@ describe('POST /locations endpoint', () => {
                 }
             });
     });
-    test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
+    test('if POST /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
             uuid: Helpers.generateUUID(),
@@ -165,7 +165,7 @@ describe('PUT /locations endpoint', () => {
             if (e) console.log(e);
         }
     });
-    test('if put /locations responds to 200 and updates a location from the database', async (done) => {
+    test('if PUT /locations responds to 200 and updates a location from the database', async (done) => {
         const dataToUpdate = {
             uuid: uuid,
             yearly_averages_low: {
@@ -229,13 +229,14 @@ describe('GET /locations endpoint', () => {
 });
 
 describe('DELETE /locations endpoint', () => {
-    test('if /remove locations responds to 200 and deletes a location from the database', async (done) => {
+    test('if DELETE /locations responds to 200 and deletes a location from the database', async (done) => {
         try {
-            await request.delete(`/locations/${uuid}`)
-                .expect(200)
-                .then((res) => {
-                    done()
-                });
+            const deletedLocation =  await request.delete(`/locations/${uuid}`)
+            expect(deletedLocation.status).toBe(200)
+            expect(deletedLocation.body).toHaveLength(1)
+            expect(deletedLocation.body[0].name).toStrictEqual('Jamaica')
+            expect(deletedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
+            done()
         } catch (e) {
             if (e) console.log(e);
         }
