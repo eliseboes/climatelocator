@@ -65,4 +65,15 @@ describe('DB connection test', () => {
         }
     })
 
+    test('if location is removed from database when passing correct uuid & location_id is removed from disaster', async () => {
+        try {
+            const deletedLocation = await request.delete(`/locations/${uuid}`)
+            expect(deletedLocation.status).toBe(200)
+            expect(deletedLocation.body).toHaveLength(1)
+            expect(deletedLocation.body[0].name).toStrictEqual('San Fransisco')
+            expect(deletedLocation.body[0].geohash).toStrictEqual('c9gs1gzb4r26')
+        } catch (error) {
+            throw error
+        }
+    })
 })
