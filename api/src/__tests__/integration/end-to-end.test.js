@@ -48,20 +48,21 @@ describe('DB connection test', () => {
         }
     })
 
-    // test('if get request succeeds', async (done) => {
-    //     try {
-    //         const receivedLocation = await request.get(`/locations/${uuid}`)
-    //         expect(receivedLocation.status).toBe(200)
-    //         expect(receivedLocation.body).not.toBeNull();
-    //         expect(receivedLocation.body[0]['name']).toBeDefined();
-    //         expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
-    //         expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
-    //         expect(receivedLocation.body[0]['geohash']).toBeDefined();
-    //         done()
-    //     } catch (e) {
-    //         if (e) console.log(e);
-    //     }
-    // });
+    test('if get request succeeds', async (done) => {
+        try {
+            const response = await request.get(`/disasters/${uuid}`)
+            console.log(response.body)
+            expect(response.status).toBe(200)
+            expect(response.body).not.toBeNull();
+            expect(response.body[0]['uuid']).toBeDefined();
+            expect(response.body[0]['name']).toStrictEqual('Typhoon Faxai');
+            expect(response.body[0]['fatalities']).toStrictEqual('123');
+            expect(response.body[0]['missing']).toStrictEqual('52');
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
 
     // test('if put request succeeds', async (done) => {
     //     const response = await request.put(`/locations`).send({
