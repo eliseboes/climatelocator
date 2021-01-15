@@ -359,15 +359,14 @@ app.get('/disasters/:type', async (req, res) => {
  * @params uuid  
  * @returns status 200 and updated disaster when OK, status 404 when not OK
  */
-app.put('/disasters/:uuid', async (req, res) => {
-  const uuid = req.params.uuid;
+app.put('/disasters', async (req, res) => {
+  const uuid = req.body.uuid;
+  const dataToUpdate = req.body;
   pg('disasters')
     .where({
       uuid: uuid
     })
-    .update({
-      type: 'wildfire'
-    })
+    .update(dataToUpdate)
     .returning('*')
     .then(function (result) {
       res.json(result)
