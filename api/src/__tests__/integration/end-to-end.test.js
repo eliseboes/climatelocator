@@ -11,7 +11,7 @@ const pg = require('knex')({
 
 describe('DB connection test', () => {
     let uuid = Helpers.generateUUID();
-    const location = {
+    const location = [{
         uuid: uuid,
         name: 'San Fransisco',
         geohash: 'c9gs1gzb4r26',
@@ -43,7 +43,9 @@ describe('DB connection test', () => {
             Nov: 15.0,
             Dec: 11.0
         }
-    }
+    }, {
+        disasterName: 'Typhoon Hagibis'
+    }]
 
     test('if location is added to the database if does not exsists', async () => {
         try {
@@ -116,5 +118,4 @@ describe('DB connection test', () => {
         expect(response.length).toBe(0);
         done()
     })
-
 })

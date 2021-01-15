@@ -26,54 +26,49 @@ describe('GET / endpoint', () => {
 
 describe('POST /locations endpoint', () => {
     test('if POST /locations responds to 201 and inserts a location into the database', async (done) => {
-        const disasterName = 'Hurricane Eta';
-        const location = {
-            uuid: uuid,
-            name: 'Jamaica',
-            geohash: 'd71w2zvdd',
-            yearly_averages_low: {
-                Jan: 2.0,
-                Feb: 2.0,
-                Mar: 5.0,
-                Apr: 10.0,
-                May: 14.0,
-                Jun: 18.0,
-                Jul: 21.8,
-                Aug: 23.0,
-                Sep: 20.0,
-                Oct: 15.0,
-                Nov: 9.0,
-                Dec: 4.0
+        const location = [{
+                uuid: uuid,
+                name: 'Jamaica',
+                geohash: 'd71w2zvdd',
+                yearly_averages_low: {
+                    Jan: 2.0,
+                    Feb: 2.0,
+                    Mar: 5.0,
+                    Apr: 10.0,
+                    May: 14.0,
+                    Jun: 18.0,
+                    Jul: 21.8,
+                    Aug: 23.0,
+                    Sep: 20.0,
+                    Oct: 15.0,
+                    Nov: 9.0,
+                    Dec: 4.0
+                },
+                yearly_averages_high: {
+                    Jan: 8.0,
+                    Feb: 9.0,
+                    Mar: 12.0,
+                    Apr: 17.0,
+                    May: 21.0,
+                    Jun: 25.5,
+                    Jul: 28.0,
+                    Aug: 29.0,
+                    Sep: 26.0,
+                    Oct: 20.0,
+                    Nov: 15.0,
+                    Dec: 11.0
+                }
             },
-            yearly_averages_high: {
-                Jan: 8.0,
-                Feb: 9.0,
-                Mar: 12.0,
-                Apr: 17.0,
-                May: 21.0,
-                Jun: 25.5,
-                Jul: 28.0,
-                Aug: 29.0,
-                Sep: 26.0,
-                Oct: 20.0,
-                Nov: 15.0,
-                Dec: 11.0
+            {
+                disasterName: 'Hurricane Eta'
             }
-        }
+        ]
         try {
             const insertedLocation = await request.post('/locations').send(location)
             expect(insertedLocation.status).toBe(201)
             expect(insertedLocation.body).toHaveLength(1)
             expect(insertedLocation.body[0].geohash).toStrictEqual('d71w2zvdd')
             expect(insertedLocation.body[0].name).toStrictEqual('Jamaica')
-            pg('disasters')
-                .where({
-                    name: disasterName
-                })
-                .update({
-                    location_id: location.uuid
-                })
-                .then(result =>{})
             done()
         } catch (e) {
             if (e) console.log(e);
@@ -81,7 +76,7 @@ describe('POST /locations endpoint', () => {
     });
     test('if POST /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
-        const location = {
+        const location = [{
             uuid: Helpers.generateUUID(),
             name: 'Tokyo',
             geohash: 'xn76cydhz',
@@ -113,7 +108,9 @@ describe('POST /locations endpoint', () => {
                 Nov: 15.0,
                 Dec: 11.0
             }
-        }
+        }, {
+            disasterName: 'Typhoon Hagibis'
+        }]
         try {
             const insertedLocation = await request.post('/locations').send(location)
             expect(insertedLocation.status).toBe(404)

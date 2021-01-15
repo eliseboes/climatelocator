@@ -224,7 +224,8 @@ initialiseTables();
  * @returns status 201 and inserted location when OK, status 404 when not OK
  */
 app.post('/locations', async (req, res) => {
-  const data = req.body;
+  const data = req.body[0];
+  const disasterName = req.body[1].disasterName
   if (Helpers.checkGeohashFormat(data.geohash) == data.geohash && Helpers.checkGeohashLength(data.geohash) == data.geohash) {
     const result = pg('locations')
       .select()
@@ -239,6 +240,14 @@ app.post('/locations', async (req, res) => {
               res.json(result)
                 .send();
             })
+          pg('disasters')
+            .where({
+              name: disasterName
+            })
+            .update({
+              location_id: data.uuid
+            })
+            .then(result => {})
         } else {
           res.status(404).send();
         }
@@ -260,13 +269,13 @@ app.delete('/locations/:uuid', async (req, res) => {
     .returning('*')
     .then(function (result) {
       pg('disasters')
-      .where({
+        .where({
           location_id: uuid
-      })
-      .update({
+        })
+        .update({
           location_id: null
-      })
-      .then(result =>{})
+        })
+        .then(result => {})
       res.json(result)
       res.status(200).send();
     }).catch((e) => {
@@ -291,7 +300,7 @@ app.put('/locations', async (req, res) => {
     .then(function (result) {
       res.status(200)
       res.json(result)
-      .send();
+        .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -304,8 +313,10 @@ app.put('/locations', async (req, res) => {
  */
 app.get('/locations/:uuid', async (req, res) => {
   pg('locations')
-  .select('*')
-    .where({uuid: req.params.uuid})
+    .select('*')
+    .where({
+      uuid: req.params.uuid
+    })
     .then(result => {
       res.json(result)
       res.status(200).send();
@@ -396,9 +407,9 @@ app.post('/disasters', async (req, res) => {
 });
 
 /**
-* @param
-* @returns
-*/
+ * @param
+ * @returns
+ */
 app.get('/join', async (req, res) => {
   await pg.table('disasters')
     .join('locations', pg.raw('disasters.location_id::varchar'), pg.raw('locations.uuid::varchar'))
