@@ -94,36 +94,36 @@ describe('PUT /locations endpoint', () => {
     });
 });
 
-// describe('GET /locations endpoint', () => {
-//     test('if GET /locations responds to 200 and returns a location from the database', async (done) => {
-//         try {
-//             const receivedLocation = await request.get(`/locations/${uuid}`)
-//             expect(receivedLocation.status).toBe(200)
-//             expect(receivedLocation.body).not.toBeNull();
-//             expect(receivedLocation.body[0]['id']).toBeDefined();
-//             expect(receivedLocation.body[0]['uuid']).toBeDefined();
-//             expect(receivedLocation.body[0]['name']).toBeDefined();
-//             expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
-//             expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
-//             expect(receivedLocation.body[0]['geohash']).toBeDefined();
-//             expect(receivedLocation.body[0]['created_at']).toBeDefined();
-//             expect(receivedLocation.body[0]['updated_at']).toBeDefined();
-//             done()
-//         } catch (e) {
-//             if (e) console.log(e);
-//         }
-//     });
-//     test('if GET /locations responds to 404 when passing the wrong ID and does not return a location', async (done) => {
-//         try {
-//             const receivedLocation = await request.get(`/locations/${uuid}5`)
-//             expect(receivedLocation.status).toBe(404)
-//             expect(receivedLocation.body).toStrictEqual({});
-//             done()
-//         } catch (e) {
-//             if (e) console.log(e);
-//         }
-//     });
-// });
+describe('GET /disasters endpoint', () => {
+    test('if GET /disasters responds to 200 and returns a disaster from the database', async (done) => {
+        try {
+            const receivedDisaster = await request.get(`/disasters/${uuid}`)
+            expect(receivedDisaster.status).toBe(200)
+            expect(receivedDisaster.body).not.toBeNull();
+            expect(receivedDisaster.body[0]['id']).toBeDefined();
+            expect(receivedDisaster.body[0]['uuid']).toBeDefined();
+            expect(receivedDisaster.body[0]['name']).toBeDefined();
+            expect(receivedDisaster.body[0]['fatalities']).toBeDefined();
+            expect(receivedDisaster.body[0]['missing']).toBeDefined();
+            expect(receivedDisaster.body[0]['damage']).toBeDefined();
+            expect(receivedDisaster.body[0]['created_at']).toBeDefined();
+            expect(receivedDisaster.body[0]['updated_at']).toBeDefined();
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+    test('if GET /disasters responds to 404 when passing the wrong ID and does not return a disaster', async (done) => {
+        try {
+            const receivedDisaster = await request.get(`/disasters/${uuid}5`)
+            expect(receivedDisaster.status).toBe(404)
+            expect(receivedDisaster.body).toStrictEqual({});
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+});
 
 describe('GET /join endpoint', () => {
     test('if GET /join responds to 200 and returns a location and a disaster', async (done) => {
