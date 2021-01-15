@@ -107,6 +107,12 @@ describe('DB connection test', () => {
         done();
     })
 
+    test('if location_id is added to disaster after join', async (done) => {
+        const response = await pg.select('*').table('disasters').where({location_id: uuid})
+        expect(response.length).toBeGreaterThan(0);
+        done()
+    })
+
     test('if location is removed from database when passing correct uuid', async () => {
         try {
             const deletedLocation = await request.delete(`/locations/${uuid}`)
@@ -124,4 +130,5 @@ describe('DB connection test', () => {
         expect(response.length).toBe(0);
         done()
     })
+
 })
