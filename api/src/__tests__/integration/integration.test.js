@@ -229,6 +229,16 @@ describe('GET /locations endpoint', () => {
 });
 
 describe('DELETE /locations endpoint', () => {
+    test('if DELETE /locations responds to 404 and does not return a location when passing wrong uuid', async (done) => {
+        try {
+            const deletedLocation =  await request.delete(`/locations/${uuid}6`)
+            expect(deletedLocation.status).toBe(404)
+            expect(deletedLocation.body).toStrictEqual({})
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
     test('if DELETE /locations responds to 200 and deletes a location from the database', async (done) => {
         try {
             const deletedLocation =  await request.delete(`/locations/${uuid}`)
