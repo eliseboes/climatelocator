@@ -370,6 +370,7 @@ app.put('/disasters', async (req, res) => {
     .update(dataToUpdate)
     .returning('*')
     .then(function (result) {
+      console.log(result);
       res.json(result)
       res.status(200).send();
     }).catch((e) => {
