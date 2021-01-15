@@ -70,18 +70,19 @@ describe('POST /locations endpoint', () => {
                     }
                 });
                 try {
-                    await request.post('/locations')
-                        .send(location)
-                        .expect(201)
-                        .then((res) => {
-                            done()
-                        });
+                    const response = await request.post('/locations').send(location)
+                    const insertedLocation = response.body.res;
+                    expect(response.status).toBe(201)
+                    expect(insertedLocation).toHaveLength(1)
+                    expect(insertedLocation[0].geohash).toStrictEqual('d71w2zvdd')
+                    expect(insertedLocation[0].name).toStrictEqual('Jamaica')
+                    done()
                 } catch (e) {
                     if (e) console.log(e);
                 }
             });
     });
-     test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
+    test('if /locations responds to 404 if location exsists and does not insert a location into the database', async (done) => {
         const disasterName = 'Hurricane Eta';
         const location = {
             uuid: Helpers.generateUUID(),
@@ -130,6 +131,7 @@ describe('POST /locations endpoint', () => {
                         .send(location)
                         .expect(404)
                         .then((res) => {
+                            expect(res.body).toStrictEqual({});
                             done()
                         });
                 } catch (e) {
@@ -172,12 +174,11 @@ describe('PUT /locations endpoint', () => {
 });
 
 describe('GET /locations endpoint', () => {
-     test('if GET /locations responds to 200 and returns a location from the database', async (done) => {
+    test('if GET /locations responds to 200 and returns a location from the database', async (done) => {
         try {
             await request.get(`/locations/${uuid}`)
                 .expect(200)
                 .then((res) => {
-                    console.log(res.body);
                     expect(res.body).not.toBeNull();
                     expect(res.body.res[0]['id']).toBeDefined();
                     expect(res.body.res[0]['uuid']).toBeDefined();
@@ -199,7 +200,6 @@ describe('GET /locations endpoint', () => {
             await request.get(`/locations/${uuid}5`)
                 .expect(404)
                 .then((res) => {
-                    console.log(res.body);
                     expect(res.body).toStrictEqual({});
                     done()
                 });
