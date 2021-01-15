@@ -2,6 +2,12 @@ const supertest = require('supertest');
 const app = require('../../server.js');
 const request = supertest(app);
 const Helpers = require('../../utils/helpers.js');
+const pg = require('knex')({
+    client: 'pg',
+    version: '9.6',
+    searchPath: ['knex', 'public'],
+    connection: process.env.PG_CONNECTION_STRING ? process.env.PG_CONNECTION_STRING : 'postgres://example:example@localhost:5432/climatelocator'
+});
 
 describe('DB connection test', () => {
     let uuid = Helpers.generateUUID();
@@ -81,13 +87,15 @@ describe('DB connection test', () => {
     });
 
     test('if put request succeeds', async (done) => {
-        const response = await request.put(`/locations`).send({uuid: uuid, name: 'California'})
+        const response = await request.put(`/locations`).send({
+            uuid: uuid,
+            name: 'California'
+        })
         expect(response.status).toBe(200)
         expect(response.body[0]).toHaveProperty('geohash')
         expect(response.body[0]).toHaveProperty('name', 'California')
         done();
     })
-
 
     test('if location is removed from database when passing correct uuid', async () => {
         try {
@@ -100,4 +108,13 @@ describe('DB connection test', () => {
             throw error
         }
     })
+
+    test('if record is deleted in db', async (done) => {
+        const response = await pg.select('*').table('locations').where({
+            uuid: uuid
+        })
+        expect(response.length).toBe(0);
+        done()
+    })
+
 })
