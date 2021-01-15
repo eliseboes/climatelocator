@@ -67,11 +67,10 @@ describe('DB connection test', () => {
     // test('if put request succeeds', async (done) => {
     //     const response = await request.put(`/locations`).send({
     //         uuid: uuid,
-    //         name: 'California'
+    //         fatalities: '22'
     //     })
     //     expect(response.status).toBe(200)
-    //     expect(response.body[0]).toHaveProperty('geohash')
-    //     expect(response.body[0]).toHaveProperty('name', 'California')
+    //     expect(response.body[0]).toHaveProperty('fatalities', '22')
     //     done();
     // })
 
@@ -83,29 +82,23 @@ describe('DB connection test', () => {
     //     done();
     // })
 
-    // test('if location_id is added to disaster after join', async (done) => {
-    //     const response = await pg.select('*').table('disasters').where({location_id: uuid})
-    //     expect(response.length).toBeGreaterThan(0);
-    //     done()
-    // })
+    test('if disaster is removed from database when passing correct uuid', async () => {
+        try {
+            const response = await request.delete(`/disasters/${uuid}`)
+            expect(response.status).toBe(200)
+            expect(response.body).toHaveLength(1)
+            expect(response.body[0].fatalities).toStrictEqual('123')
+            expect(response.body[0].name).toStrictEqual('Typhoon Faxai')
+        } catch (error) {
+            throw error
+        }
+    })
 
-    // test('if location is removed from database when passing correct uuid', async () => {
-    //     try {
-    //         const deletedLocation = await request.delete(`/locations/${uuid}`)
-    //         expect(deletedLocation.status).toBe(200)
-    //         expect(deletedLocation.body).toHaveLength(1)
-    //         expect(deletedLocation.body[0].name).toStrictEqual('California')
-    //         expect(deletedLocation.body[0].geohash).toStrictEqual('c9gs1gzb4r26')
-    //     } catch (error) {
-    //         throw error
-    //     }
-    // })
-
-    // test('if record is deleted in db', async (done) => {
-    //     const response = await pg.select('*').table('locations').where({uuid: uuid})
-    //     expect(response.length).toBe(0);
-    //     done()
-    // })
+    test('if record is deleted in db', async (done) => {
+        const response = await pg.select('*').table('disasters').where({uuid: uuid})
+        expect(response.length).toBe(0);
+        done()
+    })
 
 
 })
