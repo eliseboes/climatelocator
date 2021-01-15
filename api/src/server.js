@@ -395,18 +395,18 @@ app.post('/disasters', async (req, res) => {
     });
 });
 
-// /**
-// * @param
-// * @returns
-// */
-// app.get('/join', async (req, res) => {
-//   await DatabaseHelper
-//     .table('items')
-//     .join('lists', DatabaseHelper.raw('location.disaster_id::varchar'), DatabaseHelper.raw('lists.uuid::varchar'))
-//     .select('lists.*', 'items.*')
-//     .then((data) => {
-//       res.send(data)
-//     })
-// })
+/**
+* @param
+* @returns
+*/
+app.get('/join', async (req, res) => {
+  await pg.table('disasters')
+    .join('locations', pg.raw('disasters.location_id::varchar'), pg.raw('locations.uuid::varchar'))
+    .select('locations.*', 'disasters.*')
+    .then((data) => {
+      res.status(200)
+      res.send(data)
+    })
+})
 
 module.exports = app;
