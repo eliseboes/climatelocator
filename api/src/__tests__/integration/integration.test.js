@@ -140,7 +140,7 @@ describe('POST /locations endpoint', () => {
 
 describe('PUT /locations endpoint', () => {
     test('if put /locations responds to 200 and updates a location from the database', async (done) => {
-        const data = {
+        const dataToUpdate = {
             uuid: uuid,
             yearly_averages_low: {
                 Jan: 8.0,
@@ -158,12 +158,13 @@ describe('PUT /locations endpoint', () => {
             }
         }
         try {
-            await request.put('/locations')
-                .send(data)
-                .expect(200)
-                .then((res) => {
-                    done()
-                });
+            const response = await request.put('/locations').send(dataToUpdate)
+            const updatedLocation = response.body;
+            expect(response.status).toBe(200)
+            expect(updatedLocation).toHaveLength(1)
+            expect(updatedLocation[0].name).toStrictEqual('Jamaica')
+            expect(updatedLocation[0].geohash).toStrictEqual('d71w2zvdd')
+            done()
         } catch (e) {
             if (e) console.log(e);
         }
