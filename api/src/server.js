@@ -52,7 +52,6 @@ async function initialiseTables() {
           table.string('name');
           table.string('type');
           table.string('fatalities');
-          table.string('injuries');
           table.string('missing');
           table.string('damage');
           table.timestamps(true, true);
@@ -71,12 +70,15 @@ async function initialiseTables() {
               name: '2020 East Africa Floods',
               type: 'flood',
               fatalities: 453,
-              missing: 8
+              missing: 8,
+              damage: 360000000
             }, {
               uuid: Helpers.generateUUID(),
               name: '2019 European Heat Wave',
               type: 'heat wave',
-              fatalities: 869
+              fatalities: 869,
+              missing: 10,
+              damage: 3560000000
             },
             {
               uuid: Helpers.generateUUID(),
@@ -274,32 +276,17 @@ app.delete('/locations/:uuid', async (req, res) => {
  */
 app.put('/locations', async (req, res) => {
   const uuid = req.body.uuid;
+  const dataToUpdate = req.body;
   pg('locations')
     .where({
       uuid: uuid
     })
-    .update({
-      yearly_averages_high: {
-        Jan: 8.0,
-        Feb: 10.0,
-        Mar: 13.0,
-        Apr: 17.0,
-        May: 21.0,
-        Jun: 25.5,
-        Jul: 28.0,
-        Aug: 29.0,
-        Sep: 26.0,
-        Oct: 20.0,
-        Nov: 15.0,
-        Dec: 11.0
-      }
-    })
+    .update(dataToUpdate)
+    .returning('*')
     .then(function (result) {
       res.status(200)
-      res.json({
-          res: result
-        })
-        .send();
+      res.json(result)
+      .send();
     }).catch((e) => {
       console.log(e);
       res.status(404).send();
@@ -377,10 +364,9 @@ app.put('/disasters/:uuid', async (req, res) => {
     .update({
       type: 'wildfire'
     })
+    .returning('*')
     .then(function (result) {
-      res.json({
-        res: result
-      })
+      res.json(result)
       res.status(200).send();
     }).catch((e) => {
       console.log(e);
