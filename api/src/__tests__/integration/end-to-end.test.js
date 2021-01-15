@@ -4,7 +4,7 @@ const request = supertest(app);
 const Helpers = require('../../utils/helpers.js');
 
 describe('DB connection test', () => {
-    const uuid = Helpers.generateUUID();
+    let uuid = Helpers.generateUUID();
     const location = {
         uuid: uuid,
         name: 'San Fransisco',
@@ -65,7 +65,22 @@ describe('DB connection test', () => {
         }
     })
 
-    test('if location is removed from database when passing correct uuid & location_id is removed from disaster', async () => {
+    test('if get request succeeds', async (done) => {
+        try {
+            const receivedLocation = await request.get(`/locations/${uuid}`)
+            expect(receivedLocation.status).toBe(200)
+            expect(receivedLocation.body).not.toBeNull();
+            expect(receivedLocation.body[0]['name']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_high']).toBeDefined();
+            expect(receivedLocation.body[0]['yearly_averages_low']).toBeDefined();
+            expect(receivedLocation.body[0]['geohash']).toBeDefined();
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+
+    test('if location is removed from database when passing correct uuid', async () => {
         try {
             const deletedLocation = await request.delete(`/locations/${uuid}`)
             expect(deletedLocation.status).toBe(200)
