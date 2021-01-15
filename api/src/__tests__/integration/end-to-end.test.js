@@ -64,15 +64,15 @@ describe('DB connection test', () => {
         }
     });
 
-    // test('if put request succeeds', async (done) => {
-    //     const response = await request.put(`/locations`).send({
-    //         uuid: uuid,
-    //         fatalities: '22'
-    //     })
-    //     expect(response.status).toBe(200)
-    //     expect(response.body[0]).toHaveProperty('fatalities', '22')
-    //     done();
-    // })
+    test('if put request succeeds', async (done) => {
+        const response = await request.put(`/disasters`).send({
+            uuid: uuid,
+            fatalities: '22'
+        })
+        expect(response.status).toBe(200)
+        expect(response.body[0]).toHaveProperty('fatalities', '22')
+        done();
+    })
 
     // test('if get request of join succeeds', async (done) => {
     //     const response = await request.get(`/join`)
@@ -87,7 +87,7 @@ describe('DB connection test', () => {
             const response = await request.delete(`/disasters/${uuid}`)
             expect(response.status).toBe(200)
             expect(response.body).toHaveLength(1)
-            expect(response.body[0].fatalities).toStrictEqual('123')
+            expect(response.body[0].fatalities).toStrictEqual('22')
             expect(response.body[0].name).toStrictEqual('Typhoon Faxai')
         } catch (error) {
             throw error
