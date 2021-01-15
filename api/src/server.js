@@ -343,10 +343,10 @@ app.post('/disasters', async (req, res) => {
  */
 app.get('/disasters/:uuid', async (req, res) => {
   pg('disasters')
+    .select('*')
     .where({
       uuid: req.params.uuid
     })
-    .returning('*')
     .then(result => {
       res.json(result)
       res.status(200).send();
