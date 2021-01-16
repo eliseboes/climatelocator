@@ -63,6 +63,20 @@ describe('DB connection test', () => {
         }
     });
 
+    test('if record is added to db', async (done) => {
+        try {
+            const response = await pg.select('*').table('disasters').where({
+                uuid: uuid
+            })
+            expect(response.length).toBeGreaterThan(0);
+            expect(response[0]['name']).toStrictEqual('Typhoon Faxai');
+            expect(response[0]['fatalities']).toStrictEqual('123');
+            done()
+        } catch (e) {
+            if (e) console.log(e);
+        }
+    });
+
     test('if put request succeeds', async (done) => {
         try {
             const response = await request.put(`/disasters`).send({
