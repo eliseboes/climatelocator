@@ -8,7 +8,7 @@ const Helpers = {
     return uuid;
   },
   /** * Checks type op yearly averages param *
-   * @param months - object 'months' where type of has to be checken *
+   * @param months - object 'months' where type of has to be checked *
    * @returns months if correct, false if not correct */
 
   checkYearlyAverages: (months) => {
@@ -22,7 +22,6 @@ const Helpers = {
   /** * Checks length of geohash *
    * @param geohash - geohash of which the length has to be checked *
    * @returns geohash if correct, false if not correct */
-
   checkGeohashLength: (geohash) => {
     if (geohash.length <= 12) {
       return geohash
@@ -31,7 +30,7 @@ const Helpers = {
     }
   },
 
-  /** * Checks  if geohash only contains digits and numbers *
+  /** * Checks if geohash only contains digits and numbers *
    * @param geohash - geohash of which the format has to be checked *
    * @returns geohash if correct, false if not correct */
 
@@ -44,7 +43,7 @@ const Helpers = {
   },
 
     /** * Checks if object contains all data*
-   * @param data - data to be checken *
+   * @param data - data to be checked *
    * @returns true if data available and false if not available */
 
   checkDataComplete: (data) => {
